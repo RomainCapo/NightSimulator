@@ -1,0 +1,59 @@
+<html>
+<head>
+    <script type="text/javascript" src="lib/vis-4.21.0/vis.min.js"></script>
+    <link href="lib/vis-4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        #mynetwork {
+            width: 600px;
+            height: 400px;
+            border: 1px solid lightgray;
+        }
+    </style>
+</head>
+<body>
+<div id="mynetwork"></div>
+
+<script type="text/javascript">
+    // create an array with nodes
+    var nodes = new vis.DataSet([
+    {id: 1, label: 'x=200, y=200', x: 0, y: 0},
+    {id: 2, label: 'node 2', x: 100, y: 0},
+    {id: 3, label: 'node 3', x: 200, y: 0},
+    {id: 4, label: 'node 4', x: 400, y: 400},
+    {id: 5, label: 'node 5', x: 400, y: 0}
+]);
+
+// create an array with edges
+var edges = new vis.DataSet([
+    {from: 1, to: 2, label: 'to x=0, y=0'},
+    {from: 1, to: 3, label: 'to x=0, y=400'},
+    {from: 1, to: 4, label: 'to x=400, y=400'},
+    {from: 1, to: 5, label: 'to x=400, y=0'}
+]);
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+
+    // provide the data in the vis format
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+    var options = {
+	physics: false,
+	interaction: {
+        dragNodes: false,// do not allow dragging nodes
+    }};
+
+    // initialize your network!
+    var network = new vis.Network(container, data, options);
+	
+	network.moveTo({
+    position: {x: 0, y: 0},
+    offset: {x: -width/2, y: -height/2},
+    scale: 1,
+})
+</script>
+</body>
+</html>
