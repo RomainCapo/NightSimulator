@@ -9,19 +9,19 @@ var nodes = new vis.DataSet([
 
 // create an array with edges
 var edges = new vis.DataSet([
-{from: 0, to: 1, label: 100 },
-{from: 0, to: 2, label:  550},
-{from: 0, to: 3, label:  400},
-{from: 0, to: 4, label:  550},
+{from: 0, to: 1, label: '100'},
+{from: 0, to: 2, label: '550'},
+{from: 0, to: 3, label: '400'},
+{from: 0, to: 4, label: '550'},
 
-{from: 1, to: 2, label: 450 },
-{from: 1, to: 3, label:  200},
-{from: 1, to: 4, label:  250},
+{from: 1, to: 2, label: '450'},
+{from: 1, to: 3, label: '200'},
+{from: 1, to: 4, label: '250'},
 
-{from: 2, to: 3, label: 250 },
-{from: 2, to: 4, label: 150},
+{from: 2, to: 3, label: '250'},
+{from: 2, to: 4, label: '150'},
 
-{from: 3, to:4, label: 100}
+{from: 3, to:4, label: '100'}
 ]);
 
 // create a network
@@ -54,5 +54,19 @@ network.on('click', function (properties) {
   if (nodeID) {
     idBarClicked = this.body.nodes[nodeID].options.id;
   }
-  g.dijkstra(idBarClicked);
+  console.log(g.getSmallestWeightedPath(idBarClicked, 2));
 });
+
+function generateSelectHtml(){
+  let node = document.getElementById('nbBar');
+  for(let i = 0; i < (g.listBar.length - 1); i++){
+    let option = document.createElement("option");
+    option.text = (i+1).toString();
+    node.add(option);
+  }
+}
+
+//main
+(function() {
+  generateSelectHtml();
+})();

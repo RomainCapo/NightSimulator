@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8">
+    <title>NightSimulator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script type="text/javascript" src="lib/vis-4.21.0/vis.min.js"></script>
     <link href="lib/vis-4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
@@ -11,11 +13,20 @@
             border: 3px solid black;
         }
     </style>
-</head>
-<body>
-<div id="mynetwork"></div>
-<script src="bar.js"></script>
-<script src="graph.js"></script>
-<script src="script.js"></script>
-</body>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Nigth Simulator</h1>
+      <div id="mynetwork"></div><br>
+      <button id="run" type="button" name="button" class="btn btn-primary">Run simulation</button>
+      <label for="nbBar">Number of bar : </label>
+      <select id="nbBar">
+
+      </select>
+    </div>
+    <script src="js/bar.js"></script>
+    <script src="js/priorityQueue.js"></script>
+    <script src="js/graph.js"></script>
+    <script src="js/script.js"></script>
+  </body>
 </html>
