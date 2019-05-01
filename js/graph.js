@@ -40,6 +40,27 @@ class Graph {
     });
   }
 
+  _findEdgeId(edges, from, to){
+    let id = "-1";
+    let length = Object.keys(edges).length;
+    for(let i = 0; i < length; i++){
+      if(edges[i]["from"] == from && edges[i]["to"] == to){
+        id = edges[i]["id"];
+      }
+    }
+    return id;
+  }
+
+  drawPathOnGraph(path, edges){
+    //let nodeId = "";
+    for(let i = 0; i< (path.length - 1); i++){
+      let nodeId = this._findEdgeId(edges._data, path[i], path[i+1]);
+      console.log(typeof nodeId);
+      //edges.update({id=node})
+    }
+    console.log(nodeId);
+  }
+
   findAllPath(idBase, k){
     if(k < (this.listBar.length - 1)){
       let neighbours = this._getNeighbours(idBase);

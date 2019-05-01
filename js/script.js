@@ -9,19 +9,19 @@ var nodes = new vis.DataSet([
 
 // create an array with edges
 var edges = new vis.DataSet([
-{from: 0, to: 1, label: '100'},
-{from: 0, to: 2, label: '550'},
-{from: 0, to: 3, label: '400'},
-{from: 0, to: 4, label: '550'},
+{id: 0, from: 0, to: 1, label: '100'},
+{id: 1, from: 0, to: 2, label: '550'},
+{id: 2, from: 0, to: 3, label: '400'},
+{id: 3, from: 0, to: 4, label: '550'},
 
-{from: 1, to: 2, label: '450'},
-{from: 1, to: 3, label: '200'},
-{from: 1, to: 4, label: '250'},
+{id: 4, from: 1, to: 2, label: '450'},
+{id: 5, from: 1, to: 3, label: '200'},
+{id: 6, from: 1, to: 4, label: '250'},
 
-{from: 2, to: 3, label: '250'},
-{from: 2, to: 4, label: '150'},
+{id: 7, from: 2, to: 3, label: '250'},
+{id: 8, from: 2, to: 4, label: '150'},
 
-{from: 3, to:4, label: '100'}
+{id: 9, from: 3, to:4, label: '100'}
 ]);
 
 // create a network
@@ -38,8 +38,20 @@ var options = {
    interaction: {
       dragNodes: false,// do not allow dragging nodes
     },
+    nodes :{
+      color :'#5bc0de',
+      shape: 'box',
+      margin: 5,
+    },
    edges: {
      hoverWidth:3,
+     color: {
+          //inherit: false,
+          color:'red'
+     },
+     font: {
+       align: 'top'
+     }
    }
 };
 
@@ -48,14 +60,34 @@ var network = new vis.Network(container, data, options);
 
 let g = new Graph(nodes, edges);
 
-network.on('click', function (properties) {
+let idBarClicked = -1;
+
+network.on('click', function(properties){
+  edges.update({id: 0, color:'red'});
+});
+
+network.on('selectNode', function (properties) {
   let nodeID = properties.nodes[0];
-  let idBarClicked = 0;
+  idBarClicked = 0;
   if (nodeID) {
     idBarClicked = this.body.nodes[nodeID].options.id;
   }
-  console.log(g.getSmallestWeightedPath(idBarClicked, 2));
+  nodes.update({id:idBarClicked, color:'#0275d8'});
 });
+
+network.on("deselectNode", function(properties){
+    let deselectedNodeId = properties.previousSelection.nodes[0];
+    nodes.update({id:deselectedNodeId, color:'#5bc0de'})
+});
+
+function runClickEvent(){
+  if(idBarClicked != -1){
+    let e = document.getElementById('nbBar');
+    let idOption = e.options[e.selectedIndex].text;
+
+    console.log(g.getSmallestWeightedPath(idBarClicked, idOption));
+  }
+}
 
 function generateSelectHtml(){
   let node = document.getElementById('nbBar');
@@ -69,4 +101,6 @@ function generateSelectHtml(){
 //main
 (function() {
   generateSelectHtml();
+  edges.update({id:0, color:{highligh:'blue', color:'blue', hover:'blue', inherit:'blue'}, label:'blue'});
+  //g.drawPathOnGraph("0123", edges);
 })();
