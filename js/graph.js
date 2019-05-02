@@ -25,7 +25,7 @@ class Graph {
   _loadBarsFromJson(nodes){
       Object.entries(nodes._data).forEach(([key, val]) => {
         let node = nodes._data[key]
-        this.listBar.push(new Bar(node.id, node.label, 1, 1));
+        this.listBar.push(new Bar(node.id, node.label, node.drinkPriceAvg, node.ambience));
     });
   }
 
@@ -44,35 +44,61 @@ class Graph {
     let id = "-1";
     let length = Object.keys(edges).length;
     for(let i = 0; i < length; i++){
-      if(edges[i]["from"] == from && edges[i]["to"] == to){
+      if((edges[i]["from"] == from && edges[i]["to"] == to) || (edges[i]["from"] == to && edges[i]["to"] == from)){
         id = edges[i]["id"];
       }
     }
     return id;
   }
 
-  drawPathOnGraph(path, edges){
-    //let nodeId = "";
+  drawPathOnGraph(path, edges, nodes){
+    this.edgeDisabilityAllEdges(edges, true);
+
     for(let i = 0; i< (path.length - 1); i++){
       let nodeId = this._findEdgeId(edges._data, path[i], path[i+1]);
-      console.log(typeof nodeId);
-      //edges.update({id=node})
+      edges.update({id:nodeId, width:3, hidden:false});
+
+      nodes.update({id:path[i], color:'red'});
     }
-    console.log(nodeId);
+    nodes.update({id:path[path.length-1], color:'red'});
+  }
+
+  _getNeighboursInString(neighbours){
+    let string = "";
+    for(let i = 0; i < neighbours.length;i++){
+      string += neighbours[i]["bar"].id;
+    }
+    return string;
+  }
+
+  resetGraph(nodes, edges){
+    this.edgeDisabilityAllEdges(edges, false);
+    let length = Object.keys(nodes._data).length;
+    for(let i = 0; i < length; i++){
+      nodes.update({id:nodes._data[i].id, color:'#5bc0de'});
+    }
+  }
+
+  edgeDisabilityAllEdges(edges, disability){
+    let length = Object.keys(edges._data).length;
+    for(let i = 0; i < length; i++){
+      edges.update({id:edges._data[i].id, hidden:disability, width:1});
+    }
   }
 
   findAllPath(idBase, k){
-    if(k < (this.listBar.length - 1)){
-      let neighbours = this._getNeighbours(idBase);
-      let endPath = this._reduceArray(this.stringPermutations("1234"), k);
+    if(k < (this.listBar.length)){
+      let neighboursString = this._getNeighboursInString(this._getNeighbours(idBase));
+      let endPath = this._reduceArray(this.stringPermutations(neighboursString), k);
       return endPath.map(function(e) {return idBase + e});
     }else {
       return 0;
     }
   }
 
-  getSmallestWeightedPath(idBase, k){
+  getSmallestWeightedPath(idBase, k, option){
     let paths = this.findAllPath(idBase, k);
+    console.log(paths);
 
     let result = [];
     let weigth;
@@ -81,7 +107,6 @@ class Graph {
       for(let j = 0; j < (paths[i].length - 1); j++){
 
         weigth += this.contigMatrix[paths[i][j]][paths[i][j+1]];
-        //console.log(paths[i][j]);
       }
       let tmp = new Array(2);
       tmp["path"] = paths[i];
@@ -150,26 +175,21 @@ class Graph {
     let priorityQueue = new PriorityQueue();
     priorityQueue.enqueue(this.listBar[id], 0);
     while(!priorityQueue.isEmpty()){
-      //console.log(priorityQueue.items);
       let qE = priorityQueue.dequeue();
       let bar = qE.element;
       let priority = qE.priority;
 
       bar.visited = true;
 
-      console.log(bar.name + "-");
       let neighbours = this._getNeighbours(bar.id);
       for(let i = 0; i < neighbours.length; i++){
         if(!neighbours[i]["bar"].visited){
-          console.log(neighbours[i]["bar"]);
           priorityQueue.enqueue(neighbours[i]["bar"], priority + neighbours[i]["priority"]);
-          console.log(priorityQueue.items);
         }
       }
     }
   }
 
   test(){
-    console.log(this.getSmallestWeightedPath(0,2));
   }
 }

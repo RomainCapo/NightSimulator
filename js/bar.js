@@ -1,9 +1,9 @@
 class Bar {
-  constructor(id, name, avgPriceDrink, populatity){
+  constructor(id, name, drinkPriceAvg, ambience){
     this.id = id;
     this.name = name;
-    this.avgPriceDrink = avgPriceDrink;
-    this.populatity = populatity;
+    this.drinkPriceAvg = drinkPriceAvg;
+    this.ambience = ambience;
     this.visited = false;
     this.meeted = false;
   }

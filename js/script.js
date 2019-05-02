@@ -1,10 +1,13 @@
+//gloabl varaible
+let isSimulationMode = false;
+
 // create an array with nodes
 var nodes = new vis.DataSet([
-{id: 0, label: 'Charlot', x: 100, y: 0},
-{id: 1, label: 'Brasseur', x: 300, y: 0},
-{id: 2, label: '21', x: 650, y: 0},
-{id: 3, label: 'King Du Lac', x: 400, y: 60},
-{id: 4, label: 'Waves', x: 500, y: 65}
+{id: 0, label: 'Charlot', drinkPriceAvg:7, ambience:4, x: 100, y: 20},
+{id: 1, label: 'Brasseur', drinkPriceAvg:8, ambience:6, x: 300, y: 0},
+{id: 2, label: '21', drinkPriceAvg:6, ambience:7,x: 650, y: 0},
+{id: 3, label: 'King Du Lac', drinkPriceAvg:6, ambience:7, x: 350, y: 150},
+{id: 4, label: 'Waves', drinkPriceAvg:11, ambience:4, x: 550, y: 150}
 ]);
 
 // create an array with edges
@@ -34,7 +37,7 @@ var data = {
 };
 
 var options = {
-   physics: false,
+  physics:false,
    interaction: {
       dragNodes: false,// do not allow dragging nodes
     },
@@ -42,12 +45,12 @@ var options = {
       color :'#5bc0de',
       shape: 'box',
       margin: 5,
+
     },
    edges: {
-     hoverWidth:3,
-     color: {
-          //inherit: false,
-          color:'red'
+     hoverWidth: 1,
+     color:{
+       inherit:false
      },
      font: {
        align: 'top'
@@ -62,34 +65,54 @@ let g = new Graph(nodes, edges);
 
 let idBarClicked = -1;
 
-network.on('click', function(properties){
-  edges.update({id: 0, color:'red'});
-});
-
 network.on('selectNode', function (properties) {
   let nodeID = properties.nodes[0];
   idBarClicked = 0;
   if (nodeID) {
     idBarClicked = this.body.nodes[nodeID].options.id;
   }
-  nodes.update({id:idBarClicked, color:'#0275d8'});
+
+  if(!isSimulationMode){
+    nodes.update({id:idBarClicked, color:'#0275d8'});
+      document.getElementById("run").disabled = false;
+   }
 });
 
 network.on("deselectNode", function(properties){
     let deselectedNodeId = properties.previousSelection.nodes[0];
-    nodes.update({id:deselectedNodeId, color:'#5bc0de'})
+
+    if(!isSimulationMode){
+      nodes.update({id:deselectedNodeId, color:'#5bc0de'});
+      document.getElementById("run").disabled = true;
+    }
 });
 
-function runClickEvent(){
+function runClicEvent(){
   if(idBarClicked != -1){
     let e = document.getElementById('nbBar');
-    let idOption = e.options[e.selectedIndex].text;
+    let nbBar = e.options[e.selectedIndex].text;
 
-    console.log(g.getSmallestWeightedPath(idBarClicked, idOption));
+    let smallestPath = g.getSmallestWeightedPath(idBarClicked, nbBar, option);
+    console.log(smallestPath);
+    g.drawPathOnGraph(smallestPath["path"], edges, nodes);
+
+    isSimulationMode = true;
+
+    document.getElementById("run").disabled = true;
+    document.getElementById("exit").disabled = false;
   }
 }
 
-function generateSelectHtml(){
+function exitClicEvent(){
+  g.resetGraph(nodes, edges);
+
+  isSimulationMode = false;
+
+  document.getElementById("exit").disabled = true;
+  document.getElementById("run").disabled = false;
+}
+
+function generateSelectNbBarHtml(){
   let node = document.getElementById('nbBar');
   for(let i = 0; i < (g.listBar.length - 1); i++){
     let option = document.createElement("option");
@@ -100,7 +123,5 @@ function generateSelectHtml(){
 
 //main
 (function() {
-  generateSelectHtml();
-  edges.update({id:0, color:{highligh:'blue', color:'blue', hover:'blue', inherit:'blue'}, label:'blue'});
-  //g.drawPathOnGraph("0123", edges);
+  generateSelectNbBarHtml();
 })();

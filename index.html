@@ -18,10 +18,17 @@
     <div class="container">
       <h1>Nigth Simulator</h1>
       <div id="mynetwork"></div><br>
-      <button id="run" type="button" name="button" class="btn btn-primary" onclick="runClickEvent()">Run simulation</button>
+      <button id="run" type="button" disabled name="button" class="btn btn-primary" onclick="runClicEvent()">Run Simulation Mode</button>
+      <button id="exit" type="button" disabled name="button" class="btn btn-info" onclick="exitClicEvent()">Exit Simulation Mode</button>
       <label for="nbBar">Number of bar : </label>
       <select id="nbBar">
-
+      </select>
+      <label for="simulationOption">Option for the simulation : </label>
+      <select id="simulationOption">
+        <option value="pathLength">Length of the paths</option>
+        <option value="drinkPrice">Price of the drinks</option>
+        <option value="barAmbience">Ambience of the bar</option>
+        <option value="AllOptions">All options</option>
       </select>
     </div>
     <script src="js/bar.js"></script>
