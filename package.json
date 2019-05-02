@@ -1,0 +1,21 @@
+{
+  "name": "nigthsimulator",
+  "version": "1.0.0",
+  "description": "algoNum_project",
+  "main": "js/script.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://forge.ing.he-arc.ch/gitlab/romain.capocasa/nigthsimulator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "file-system": "^2.2.2"
+  }
+}
