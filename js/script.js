@@ -1,16 +1,23 @@
+
 //gloabl varaible
 let isSimulationMode = false;
 
-// create an array with nodes
+// creation d'un tableau avec les noeuds
 var nodes = new vis.DataSet([
-{id: 0, label: 'Charlot', drinkPriceAvg:7, ambience:4, x: 100, y: 20},
-{id: 1, label: 'Brasseur', drinkPriceAvg:8, ambience:6, x: 300, y: 0},
-{id: 2, label: '21', drinkPriceAvg:6, ambience:7,x: 650, y: 0},
-{id: 3, label: 'King Du Lac', drinkPriceAvg:6, ambience:7, x: 400, y: 150},
+/*{id: 0, label: 'Inside', drinkPriceAvg:8, ambience:9, x: 350, y: 0},
+{id: 1, label: 'Cerf', drinkPriceAvg:6, ambience:8, x: 90, y: 50},
+{id: 2, label: 'Glenn', drinkPriceAvg:5, ambience:6, x: 300, y: 55},
+{id: 3, label: 'Seven', drinkPriceAvg:11, ambience:10, x: 400, y: 60},*/
+
+
+{id: 0, label: 'Charlot', drinkPriceAvg:7, ambience:4, x: 100, y: 80},
+{id: 1, label: 'Brasseur', drinkPriceAvg:8, ambience:6, x: 300, y: 60},
+{id: 2, label: '21', drinkPriceAvg:6, ambience:7,x: 650, y: 60},
+{id: 3, label: 'King Du Lac', drinkPriceAvg:6, ambience:7, x: 400, y: 210},
 {id: 4, label: 'Waves', drinkPriceAvg:11, ambience:4, x: 580, y: 150}
 ]);
 
-// create an array with edges
+// creations d'un tableau avec les cotes
 var edges = new vis.DataSet([
 {id: 0, from: 0, to: 1, label: '100'},
 {id: 1, from: 0, to: 2, label: '550'},
@@ -24,22 +31,23 @@ var edges = new vis.DataSet([
 {id: 7, from: 2, to: 3, label: '250'},
 {id: 8, from: 2, to: 4, label: '150'},
 
-{id: 9, from: 3, to:4, label: '100'}
+
 ]);
 
-// create a network
+//creation du reseau
 var container = document.getElementById('mynetwork');
 
-// provide the data in the vis format
+// fournit les donnees sous le format de la librairie
 var data = {
     nodes: nodes,
     edges: edges
 };
 
+//options du graphe
 var options = {
   physics:false,
    interaction: {
-      dragNodes: false,// do not allow dragging nodes
+      dragNodes: false,
     },
     nodes :{
       color :'#5bc0de',
@@ -58,13 +66,18 @@ var options = {
    }
 };
 
-// initialize your network!
-var network = new vis.Network(container, data, options);
 
-let g = new Graph(nodes, edges);
+var network = new vis.Network(container, data, options);//Initialisation du reseau
 
-let idBarClicked = -1;
+edges.add([{id: 9, from: 3, to:4, label: 'test'}])
 
+let g = new Graph(nodes, edges);//création du graphe
+
+let idBarClicked = -1;//id du noeud cliqué, -1 si aucun noeud cliqué
+
+/**
+ * evenement lors d'un clic sur un noeud
+ */
 network.on('selectNode', function (properties) {
   let nodeID = properties.nodes[0];
   idBarClicked = 0;
@@ -84,6 +97,9 @@ network.on('selectNode', function (properties) {
    document.getElementById('barContent').innerHTML = '<ul><li>Drink price : ' + nodes._data[nodeID].drinkPriceAvg + '.-</li><li>Ambience : ' + nodes._data[nodeID].ambience + '/10</li></ul>';
 });
 
+/**
+ * evenement lors de la deselection d'un noeud
+ */
 network.on('deselectNode', function(properties){
     let deselectedNodeId = properties.previousSelection.nodes[0];
 
@@ -95,6 +111,9 @@ network.on('deselectNode', function(properties){
     document.getElementById('barInfo').style.visibility = "hidden";
 });
 
+/**
+ * evenement lors du clic sur le bouton de lancement de la simulation
+ */
 function runClicEvent(){
   if(idBarClicked != -1){
     let eBar = document.getElementById('nbBar');
@@ -114,6 +133,9 @@ function runClicEvent(){
   }
 }
 
+/**
+ * evenement lors du clic sur le bouton de fermeture de la simulation
+ */
 function exitClicEvent(){
   g.resetGraph(nodes, edges);
 
@@ -123,6 +145,9 @@ function exitClicEvent(){
   document.getElementById("run").disabled = false;
 }
 
+/**
+ * permet de genéré en format html la liste deroulante permettant de choisir le nombre de bar voulu pour la simulation
+ */
 function generateSelectNbBarHtml(){
   let node = document.getElementById('nbBar');
   for(let i = 0; i < (g.listBar.length - 1); i++){
@@ -132,7 +157,9 @@ function generateSelectNbBarHtml(){
   }
 }
 
-//main
+/**
+ * fonction main du programme
+ */
 (function() {
   generateSelectNbBarHtml();
 })();
