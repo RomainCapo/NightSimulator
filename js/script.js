@@ -6,8 +6,8 @@ var nodes = new vis.DataSet([
 {id: 0, label: 'Charlot', drinkPriceAvg:7, ambience:4, x: 100, y: 20},
 {id: 1, label: 'Brasseur', drinkPriceAvg:8, ambience:6, x: 300, y: 0},
 {id: 2, label: '21', drinkPriceAvg:6, ambience:7,x: 650, y: 0},
-{id: 3, label: 'King Du Lac', drinkPriceAvg:6, ambience:7, x: 350, y: 150},
-{id: 4, label: 'Waves', drinkPriceAvg:11, ambience:4, x: 550, y: 150}
+{id: 3, label: 'King Du Lac', drinkPriceAvg:6, ambience:7, x: 400, y: 150},
+{id: 4, label: 'Waves', drinkPriceAvg:11, ambience:4, x: 580, y: 150}
 ]);
 
 // create an array with edges
@@ -76,23 +76,34 @@ network.on('selectNode', function (properties) {
     nodes.update({id:idBarClicked, color:'#0275d8'});
       document.getElementById("run").disabled = false;
    }
+
+   console.log(nodes._data[nodeID].label);
+
+   document.getElementById('barInfo').style.visibility = "visible";
+   document.getElementById('barName').textContent = nodes._data[nodeID].label;
+   document.getElementById('barContent').innerHTML = '<ul><li>Drink price : ' + nodes._data[nodeID].drinkPriceAvg + '.-</li><li>Ambience : ' + nodes._data[nodeID].ambience + '/10</li></ul>';
 });
 
-network.on("deselectNode", function(properties){
+network.on('deselectNode', function(properties){
     let deselectedNodeId = properties.previousSelection.nodes[0];
 
     if(!isSimulationMode){
       nodes.update({id:deselectedNodeId, color:'#5bc0de'});
       document.getElementById("run").disabled = true;
     }
+
+    document.getElementById('barInfo').style.visibility = "hidden";
 });
 
 function runClicEvent(){
   if(idBarClicked != -1){
-    let e = document.getElementById('nbBar');
-    let nbBar = e.options[e.selectedIndex].text;
+    let eBar = document.getElementById('nbBar');
+    let nbBar = eBar.options[eBar.selectedIndex].text;
 
-    let smallestPath = g.getSmallestWeightedPath(idBarClicked, nbBar, option);
+    let eOpt = document.getElementById('simulationOption');
+    let simOpt = eOpt.options[eOpt.selectedIndex].value;
+
+    let smallestPath = g.getSmallestWeightedPath(idBarClicked, nbBar, simOpt);
     console.log(smallestPath);
     g.drawPathOnGraph(smallestPath["path"], edges, nodes);
 

@@ -58,9 +58,9 @@ class Graph {
       let nodeId = this._findEdgeId(edges._data, path[i], path[i+1]);
       edges.update({id:nodeId, width:3, hidden:false});
 
-      nodes.update({id:path[i], color:'red'});
+      nodes.update({id:path[i], color:'#5cb85c'});
     }
-    nodes.update({id:path[path.length-1], color:'red'});
+    nodes.update({id:path[path.length-1], color:'#5cb85c'});
   }
 
   _getNeighboursInString(neighbours){
@@ -96,9 +96,12 @@ class Graph {
     }
   }
 
+  weigthFunction(){
+    
+  }
+
   getSmallestWeightedPath(idBase, k, option){
     let paths = this.findAllPath(idBase, k);
-    console.log(paths);
 
     let result = [];
     let weigth;
@@ -106,7 +109,15 @@ class Graph {
       let weigth = 0;
       for(let j = 0; j < (paths[i].length - 1); j++){
 
-        weigth += this.contigMatrix[paths[i][j]][paths[i][j+1]];
+        if(option == "pathLength"){
+          weigth += this.contigMatrix[paths[i][j]][paths[i][j+1]];
+        }else if (option == "drinkPrice") {
+          //console.log(listBar[paths[i][j]].name + " - " listBar[paths[i][j]].drinkPriceAvg);
+          weigth += this.listBar[paths[i][j]].drinkPriceAvg;
+        }else if (option == "barAmbience") {
+          weigth += this.listBar[paths[i][j]].ambience;
+        }
+
       }
       let tmp = new Array(2);
       tmp["path"] = paths[i];
