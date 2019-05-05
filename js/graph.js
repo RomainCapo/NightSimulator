@@ -264,7 +264,36 @@ class Graph {
       .sort()
     }
 
-    static creteEdge(nodes){
-      //for(let i)
+    static getDistanceBetweenTwoNodes(node1, node2){
+      return Math.ceil(Math.sqrt(Math.pow(node2.x - node1.x, 2) + Math.pow(node2.y - node1.y, 2)));
+    }
+
+    static createEdges(nodes, edges){
+      let length = Object.keys(nodes._data).length;
+      let edgeId = 0;
+      for(let i = 0; i < length; i++){
+        for(let j = (i + 1); j < length; j++){
+          let distance = Graph.getDistanceBetweenTwoNodes(nodes._data[i], nodes._data[j]).toString();
+          edges.add([{id:edgeId, from:i, to:j, label: distance}])
+          edgeId++;
+        }
+      }
+    }
+
+
+    permutation(string, prefix, k){
+      if(k == 0){
+        console.log(prefix);
+        return;
+      }
+
+      for(let i = 0; i < string.length;i++){
+        this.permutation(string, prefix + string[i], k-1)
+      }
+
+    }
+
+    test(){
+      this.permutation("1234", "", 3)
     }
 }

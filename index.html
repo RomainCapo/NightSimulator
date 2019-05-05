@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script type="text/javascript" src="lib/vis-4.21.0/vis.min.js"></script>
     <link href="lib/vis-4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="bower_components/generatorics/generatorics.js"></script>
     <style type="text/css">
         #mynetwork {
             width: 1000px;
@@ -16,35 +18,36 @@
         #barInfo{
           visibility:hidden;
           position: relative;
-          left: 1050px;
+          left: 1350px;
           top: -600px;
-
         }
     </style>
   </head>
   <body>
     <div class="container">
       <h1>Nigth Simulator</h1>
-
       <div id="mynetwork"></div>
-      <div id="barInfo" class="card ard border-primary mb-3 mb-3" style="max-width: 18rem;">
-        <div class="card-header" id="barName">Bar name</div>
-          <div class="card-body">
-            <p class="card-text" id="barContent">Content</p>
-        </div>
+      <br>
+      <div id="simulationPanel">
+        <button id="run" type="button" disabled name="button" class="btn btn-primary" onclick="runClicEvent()">Run Simulation Mode</button>
+        <button id="exit" type="button" disabled name="button" class="btn btn-info" onclick="exitClicEvent()">Exit Simulation Mode</button>
+        <label for="nbBar">Number of bar : </label>
+        <select id="nbBar">
+        </select>
+        <label for="simulationOption">Option for the simulation : </label>
+        <select id="simulationOption">
+          <option value="pathLength">Length of the paths</option>
+          <option value="drinkPrice">Price of the drinks</option>
+          <option value="barAmbience">Ambience of the bar</option>
+          <option value="AllOptions">All options</option>
+        </select>
       </div>
-      <button id="run" type="button" disabled name="button" class="btn btn-primary" onclick="runClicEvent()">Run Simulation Mode</button>
-      <button id="exit" type="button" disabled name="button" class="btn btn-info" onclick="exitClicEvent()">Exit Simulation Mode</button>
-      <label for="nbBar">Number of bar : </label>
-      <select id="nbBar">
-      </select>
-      <label for="simulationOption">Option for the simulation : </label>
-      <select id="simulationOption">
-        <option value="pathLength">Length of the paths</option>
-        <option value="drinkPrice">Price of the drinks</option>
-        <option value="barAmbience">Ambience of the bar</option>
-        <option value="AllOptions">All options</option>
-      </select>
+    </div>
+    <div id="barInfo" class="card ard border-primary mb-3 mb-3" style="max-width: 18rem;">
+      <div class="card-header" id="barName">Bar name</div>
+        <div class="card-body">
+          <p class="card-text" id="barContent">Content</p>
+      </div>
     </div>
     <script src="js/bar.js"></script>
     <script src="js/priorityQueue.js"></script>

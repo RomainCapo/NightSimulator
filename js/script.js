@@ -1,38 +1,50 @@
+/*function printPermutations(array, k){
+    var combinations = [];
+    var indices = [];
+
+
+    function run(level, start){
+
+        for(var i=0; i < array.length; i++){
+
+            if(!indices[i]){
+
+                indices[i] = true;
+
+                combinations[level] = array[i];
+
+                if(level < k - 1){
+                    run(level + 1, i + 1);
+                } else {
+                    console.log(combinations.join(" "));
+                }
+
+                indices[i] = false;
+            }
+        }
+    }
+    run(0, 0);
+}*/
+
 
 //gloabl varaible
 let isSimulationMode = false;
 
 // creation d'un tableau avec les noeuds
 var nodes = new vis.DataSet([
-/*{id: 0, label: 'Inside', drinkPriceAvg:8, ambience:9, x: 350, y: 0},
+{id: 0, label: 'Inside', drinkPriceAvg:8, ambience:9, x: 350, y: 0},
 {id: 1, label: 'Cerf', drinkPriceAvg:6, ambience:8, x: 90, y: 50},
-{id: 2, label: 'Glenn', drinkPriceAvg:5, ambience:6, x: 300, y: 55},
-{id: 3, label: 'Seven', drinkPriceAvg:11, ambience:10, x: 400, y: 60},*/
-
-
-{id: 0, label: 'Charlot', drinkPriceAvg:7, ambience:4, x: 100, y: 80},
-{id: 1, label: 'Brasseur', drinkPriceAvg:8, ambience:6, x: 300, y: 60},
-{id: 2, label: '21', drinkPriceAvg:6, ambience:7,x: 650, y: 60},
-{id: 3, label: 'King Du Lac', drinkPriceAvg:6, ambience:7, x: 400, y: 210},
-{id: 4, label: 'Waves', drinkPriceAvg:11, ambience:4, x: 580, y: 150}
+{id: 2, label: 'Glenn', drinkPriceAvg:5, ambience:6, x: 200, y: 55},
+{id: 3, label: 'Seven', drinkPriceAvg:11, ambience:10, x: 400, y: 60},
+{id: 4, label: 'Charlot', drinkPriceAvg:7, ambience:4, x: 100, y: 80},
+{id: 5, label: 'Brasseur', drinkPriceAvg:8, ambience:6, x: 300, y: 60},
+{id: 6, label: '21', drinkPriceAvg:6, ambience:7,x: 650, y: 60},
+{id: 7, label: 'King Du Lac', drinkPriceAvg:6, ambience:7, x: 400, y: 210},
+{id: 8, label: 'Waves', drinkPriceAvg:11, ambience:4, x: 580, y: 150}
 ]);
 
 // creations d'un tableau avec les cotes
-var edges = new vis.DataSet([
-{id: 0, from: 0, to: 1, label: '100'},
-{id: 1, from: 0, to: 2, label: '550'},
-{id: 2, from: 0, to: 3, label: '400'},
-{id: 3, from: 0, to: 4, label: '550'},
-
-{id: 4, from: 1, to: 2, label: '450'},
-{id: 5, from: 1, to: 3, label: '200'},
-{id: 6, from: 1, to: 4, label: '250'},
-
-{id: 7, from: 2, to: 3, label: '250'},
-{id: 8, from: 2, to: 4, label: '150'},
-
-
-]);
+var edges = new vis.DataSet([]);
 
 //creation du reseau
 var container = document.getElementById('mynetwork');
@@ -51,7 +63,7 @@ var options = {
     },
     nodes :{
       color :'#5bc0de',
-      shape: 'box',
+      //shape: 'box',
       margin: 5,
 
     },
@@ -69,7 +81,7 @@ var options = {
 
 var network = new vis.Network(container, data, options);//Initialisation du reseau
 
-edges.add([{id: 9, from: 3, to:4, label: 'test'}])
+Graph.createEdges(nodes, edges);
 
 let g = new Graph(nodes, edges);//création du graphe
 
