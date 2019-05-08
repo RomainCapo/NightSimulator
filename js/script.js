@@ -1,50 +1,40 @@
-/*function printPermutations(array, k){
-    var combinations = [];
-    var indices = [];
-
-
-    function run(level, start){
-
-        for(var i=0; i < array.length; i++){
-
-            if(!indices[i]){
-
-                indices[i] = true;
-
-                combinations[level] = array[i];
-
-                if(level < k - 1){
-                    run(level + 1, i + 1);
-                } else {
-                    console.log(combinations.join(" "));
-                }
-
-                indices[i] = false;
-            }
-        }
-    }
-    run(0, 0);
-}*/
-
-
 //gloabl varaible
 let isSimulationMode = false;
 
 // creation d'un tableau avec les noeuds
 var nodes = new vis.DataSet([
-{id: 0, label: 'Inside', drinkPriceAvg:8, ambience:9, x: 350, y: 0},
-{id: 1, label: 'Cerf', drinkPriceAvg:6, ambience:8, x: 90, y: 50},
-{id: 2, label: 'Glenn', drinkPriceAvg:5, ambience:6, x: 200, y: 55},
-{id: 3, label: 'Seven', drinkPriceAvg:11, ambience:10, x: 400, y: 60},
-{id: 4, label: 'Charlot', drinkPriceAvg:7, ambience:4, x: 100, y: 80},
-{id: 5, label: 'Brasseur', drinkPriceAvg:8, ambience:6, x: 300, y: 60},
-{id: 6, label: '21', drinkPriceAvg:6, ambience:7,x: 650, y: 60},
-{id: 7, label: 'King Du Lac', drinkPriceAvg:6, ambience:7, x: 400, y: 210},
-{id: 8, label: 'Waves', drinkPriceAvg:11, ambience:4, x: 580, y: 150}
+{id: 'a', label: 'Inside', drinkPriceAvg:8, ambience:9, x: 350, y: 0},
+{id: 'b', label: 'Cerf', drinkPriceAvg:6, ambience:8, x: 90, y: 50},
+{id: 'c', label: 'Glenn', drinkPriceAvg:5, ambience:6, x: 200, y: 55},
+{id: 'd', label: 'Charlot', drinkPriceAvg:7, ambience:4, x: 100, y: 120},
+{id: 'e', label: 'Brasseur', drinkPriceAvg:8, ambience:6, x: 300, y: 60},
+{id: 'f', label: '21', drinkPriceAvg:6, ambience:7,x: 650, y: 60},
+{id: 'g', label: 'King Du Lac', drinkPriceAvg:6, ambience:7, x: 400, y: 210},
+{id: 'h', label: 'Waves', drinkPriceAvg:11, ambience:4, x: 580, y: 150}
 ]);
 
 // creations d'un tableau avec les cotes
-var edges = new vis.DataSet([]);
+var edges = new vis.DataSet([
+{id:0, from:'a', to:'g'},
+{id:1, from:'a', to:'b'},
+{id:2, from:'b', to:'c'},
+{id:3, from:'b', to:'d'},
+{id:4, from:'d', to:'c'},
+{id:5, from:'a', to:'e'},
+{id:6, from:'d', to:'c'},
+{id:7, from:'e', to:'c'},
+{id:8, from:'c', to:'g'},
+{id:9, from:'d', to:'g'},
+{id:10, from:'e', to:'g'},
+{id:11, from:'g', to:'h'},
+{id:12, from:'e', to:'h'},
+{id:13, from:'a', to:'h'},
+{id:14, from:'a', to:'f'},
+{id:15, from:'a', to:'h'},
+{id:16, from:'f', to:'g'},
+{id:17, from:'e', to:'f'},
+{id:18, from:'h', to:'f'},
+]);
 
 //creation du reseau
 var container = document.getElementById('mynetwork');
@@ -63,9 +53,8 @@ var options = {
     },
     nodes :{
       color :'#5bc0de',
-      //shape: 'box',
+      shape: 'box',
       margin: 5,
-
     },
    edges: {
      hoverWidth: 1,
@@ -81,9 +70,9 @@ var options = {
 
 var network = new vis.Network(container, data, options);//Initialisation du reseau
 
-Graph.createEdges(nodes, edges);
-
+Graph.initEdgesLabel(nodes, edges);
 let g = new Graph(nodes, edges);//création du graphe
+g.dijkstra('a')
 
 let idBarClicked = -1;//id du noeud cliqué, -1 si aucun noeud cliqué
 
@@ -101,8 +90,6 @@ network.on('selectNode', function (properties) {
     nodes.update({id:idBarClicked, color:'#0275d8'});
       document.getElementById("run").disabled = false;
    }
-
-   console.log(nodes._data[nodeID].label);
 
    document.getElementById('barInfo').style.visibility = "visible";
    document.getElementById('barName').textContent = nodes._data[nodeID].label;
@@ -134,9 +121,7 @@ function runClicEvent(){
     let eOpt = document.getElementById('simulationOption');
     let simOpt = eOpt.options[eOpt.selectedIndex].value;
 
-    let smallestPath = g.getSmallestWeightedPath(idBarClicked, nbBar, simOpt);
-    console.log(smallestPath);
-    g.drawPathOnGraph(smallestPath["path"], edges, nodes);
+    //g.drawPathOnGraph(smallestPath["path"], edges, nodes);
 
     isSimulationMode = true;
 
