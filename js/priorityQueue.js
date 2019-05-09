@@ -42,11 +42,23 @@ class PriorityQueue{
             break;
         }
     }
-
     if (!contain) {
         this.items.push(qElement);
     }
   }
+
+  decreasePriority(element, priority, idParent){
+    for(let i = 0; i < this.items.length; i++)
+    {
+      if(JSON.stringify(element) === JSON.stringify(this.items[i].element) )
+      {
+        if (i !== -1) this.items.splice(i, 1);
+      }
+    }
+
+    this.enqueue(element, priority, idParent);
+  }
+
 
 /**
  * Permet d'enelver l'element avec la plus basse priorité de la file

@@ -149,13 +149,14 @@ _resetBar(){
     priorityQueue.enqueue(this.listBar[this._getIdFromString(id)], 0);
 
     while(!priorityQueue.isEmpty()){
+      this.logg(priorityQueue, "prio : ");
       let qE = priorityQueue.dequeue();
       let bar = qE.element;
       let priority = qE.priority;
       let idParent = qE.idParent;
 
       bar.visited = true;
-      this.logg(bar);
+      this.logg(bar, "bar : ");
 
       let neighbours = this._getNeighbours(bar.id);
       for(let i = 0; i < neighbours.length; i++){
@@ -217,9 +218,21 @@ _resetBar(){
 // Méthode de debug
 //================================================================================
     test(){
+
+      let pq = new PriorityQueue();
+      let bar1 = new Bar('a', 'test', 12, 13)
+      let bar2 = new Bar('b', 'test3', 612, 13)
+      let bar3 = new Bar('c', 'test4', 12, 163)
+      pq.enqueue(bar1, 12)
+      pq.enqueue(bar2, 45)
+      pq.enqueue(bar3, 120)
+      this.logg(pq);
+
+      pq.decreasePriority(bar2, 5);
+      this.logg(pq);
     }
 
-    logg(obj){
-      console.log(JSON.stringify(obj));
+    logg(obj, text = ""){
+      console.log(text + " " + JSON.stringify(obj));
     }
 }

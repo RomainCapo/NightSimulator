@@ -8,6 +8,7 @@ var nodes = new vis.DataSet([
 {id: 'c', label: 'Glenn', drinkPriceAvg:5, ambience:6, x: 200, y: 55},
 {id: 'd', label: 'Charlot', drinkPriceAvg:7, ambience:4, x: 100, y: 120},
 {id: 'e', label: 'Brasseur', drinkPriceAvg:8, ambience:6, x: 300, y: 60},
+//{id: 'f', label: 'McDo', drinkPriceAvg:6, ambience:8, x: 200, y: 30},
 /*{id: 'f', label: '21', drinkPriceAvg:6, ambience:7,x: 650, y: 60},
 {id: 'g', label: 'King Du Lac', drinkPriceAvg:6, ambience:7, x: 400, y: 210},
 {id: 'h', label: 'Waves', drinkPriceAvg:11, ambience:4, x: 580, y: 150}*/
@@ -71,8 +72,10 @@ var options = {
 var network = new vis.Network(container, data, options);//Initialisation du reseau
 
 Graph.initEdgesLabel(nodes, edges);
+edges.update([{id:0, label:'800'}])
 let g = new Graph(nodes, edges);//création du graphe
-g.dijkstra('a');
+g.test();
+//g.dijkstra('a');
 
 let idBarClicked = -1;//id du noeud cliqué, -1 si aucun noeud cliqué
 
