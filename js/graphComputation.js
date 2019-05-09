@@ -1,7 +1,7 @@
 /**
- * represente un graphe
+ * classe permettant de faire des calcules sur un graphe
  */
-class Graph {
+class GraphComputation {
   /**
    * constructeur du graphe
    * @param {object} nodes objet noeud de vis.js sous format json
@@ -63,79 +63,18 @@ class Graph {
   }
 }
 
-_getIdFromString($string){
+_getIdFromString(string){
   let alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
-  return alphabet.indexOf($string);
+  return alphabet.indexOf(string);
 }
-
-//================================================================================
-// Dessin du chemin
-//================================================================================
-
-// /**
-//  * permet de trouver l'id d'un cote a partir d'un depart et d'une arrivée
-//  * @param  {object} edges object edge de vis.js
-//  * @param  {number} from  id de depart
-//  * @param  {number} to    id d'arrive
-//  * @return {number}       id du cote
-//  */
-//   _findEdgeId(edges, from, to){
-//     let id = "-1";
-//     let length = Object.keys(edges).length;
-//     for(let i = 0; i < length; i++){
-//       if((edges[i]["from"] == from && edges[i]["to"] == to) || (edges[i]["from"] == to && edges[i]["to"] == from)){
-//         id = edges[i]["id"];
-//       }
-//     }
-//     return id;
-//   }
-// /**
-//  * dessine un chemin sur le graphe, change la couleur des sommet et change l'epaisseur des cote
-//  * @param  {string} path  chemin du graphe
-//  * @param  {object} edges objet noeud de vis.js sous format json
-//  * @param  {object} nodes objet edge de vis.js sous format json
-//  */
-//   drawPathOnGraph(path, edges, nodes){
-//     this._edgeDisabilityAllEdges(edges, true);
-//
-//     for(let i = 0; i< (path.length - 1); i++){
-//       let nodeId = this._findEdgeId(edges._data, path[i], path[i+1]);
-//       edges.update({id:nodeId, width:3, hidden:false});
-//
-//       nodes.update({id:path[i], color:'#5cb85c'});
-//     }
-//     nodes.update({id:path[path.length-1], color:'#5cb85c'});
-//   }
-//
-//   /**
-//    * reaffiche tous les cotes et reinitialise la couleur des sommets
-//    * @param {object} nodes edges objet noeud de vis.js sous format json
-//    * @param {object} edges objet edge de vis.js sous format json
-//    */
-//   resetGraph(nodes, edges){
-//     this._edgeDisabilityAllEdges(edges, false);
-//     let length = Object.keys(nodes._data).length;
-//     for(let i = 0; i < length; i++){
-//       nodes.update({id:nodes._data[i].id, color:'#5bc0de'});
-//     }
-//   }
-//
-// /**
-//  * change la visibilite de tous les cotes du graphe
-//  * @param  {object} edges objet edge de vis.js sous format json
-//  * @param  {boolean} disability indique si on veut cacher ou non les cotes
-//  */
-//   _edgeDisabilityAllEdges(edges, disability){
-//     let length = Object.keys(edges._data).length;
-//     for(let i = 0; i < length; i++){
-//       edges.update({id:edges._data[i].id, hidden:disability, width:1});
-//     }
-//   }
 
 //================================================================================
 // Calcul des chemins du graphe
 //================================================================================
 
+/**
+ * reinnitilise les attributs de tous les bars en vu d'un nouveau parcours avec dijkstra
+ */
 _resetBar(){
     for(let i = 0; i < this.listBar.length; i++){
       this.listBar[i].visited = false;
@@ -144,7 +83,11 @@ _resetBar(){
     }
   }
 
-  dijkstra(id){
+/**
+ * execution de l'algorithme de dijkstra, on cherche les chemins les plus court entre un sommet initial et tous les autres sommets
+ * @param  {string} id du bar a partir du quel on execute l'algorithme
+ */
+  _dijkstra(id){
     let tmp = [];
     this._resetBar();
 
@@ -188,13 +131,44 @@ _resetBar(){
     //console.log(tmp);
   }
 
-  getAllShortestPathFromDijkstra(id){
-    /*this.dijkstra(id);
+/**
+ * fonction recursive qui permet de reconstituer le chemin le plus court entre 2 sommet après l'execution de l'algorithme de dijkstra.
+ * Attention l'algorithme de dijkstra doit etre execute avant d'appeler cette fonction.
+ * @param  {string} barId id du bar auquel l'utilisateur souhaite se rendre
+ * @return {string}       retourne le chemin le plus cout entre un sommet initial et le sommet précisé en parametre. Attention le chemin est dans le sens inverse.
+ */
+  _getShortestPathRecursive(barId){
+    let currentBar = this.listBar[this._getIdFromString(barId)];
+    if(currentBar.idParent == "none"){
+      return currentBar.id;
+    }else {
+      return currentBar.id + this._getShortestPathRecursive(currentBar.idParent);
+    }
+  }
+
+/**
+ * permet de calculer le chemin le plus court entre 2 sommets.
+ * @param  {string} startId id du sommet initial
+ * @param  {string} endId   id du somment final
+ * @return {string}         retourne le chemin le plus court entre 2 sommets.
+ */
+  getShortestPath(startId, endId){
+    this._dijkstra(startId);
+    return this._getShortestPathRecursive(endId).split("").reverse().join("");//permet de renverser le string renvoyer par la fonction
+  }
+
+/**
+ * permet de calculer tous les chemin les plus courts a partir d'un sommet initial .
+ * @param  {string} startId id du sommet initial
+ * @return {array}         tableau contenant tous les chemins les plus court pour atteindre pour atteindre tous les sommets du graphe a partir d'un sommet initial.
+ */
+  getAllShortestPaths(startId){
+    this._dijkstra(startId);
     let paths = [];
     this.listBar.forEach(function(e){
-      let path += e.id
-      this.logg(e);
-    }, this);*/
+      paths[e.id] = this._getShortestPathRecursive(e.id).split("").reverse().join("");
+    }, this);
+    return paths;
   }
 
 // /**
@@ -229,43 +203,12 @@ _resetBar(){
       return neighbours;
     }
 
-    static initEdgesLabel(nodes, edges){
-    let length = Object.keys(edges._data).length;
-    for(let i=0; i < length; i++){
-
-      let from = edges._data[i].from;
-      let to = edges._data[i].to;
-      let distance = this._getDistanceBetweenTwoNodes(nodes._data[from], nodes._data[to]).toString();
-      edges.update([{id: i, label:distance}])
-      }
-    }
-
-    static _getDistanceBetweenTwoNodes(node1, node2){
-      return Math.ceil(Math.sqrt(Math.pow(node2.x - node1.x, 2) + Math.pow(node2.y - node1.y, 2)));
-    }
-
 //================================================================================
 // Méthode de debug
 //================================================================================
     test(){
-
-    /*  let pq = new PriorityQueue();
-      let bar1 = new Bar('a', 'test', 12, 13)
-      let bar2 = new Bar('b', 'test3', 612, 13)
-      let bar3 = new Bar('c', 'test4', 12, 163)
-      pq.enqueue(bar1, 12)
-      pq.enqueue(bar2, 45)
-      pq.enqueue(bar3, 120)
-      this.logg(pq);
-
-      pq.decreasePriority(bar2, 5);
-      this.logg(pq);
-
-      console.log(pq.getPriority(bar1));*/
-      let bar1 = new Bar('a', 'test', 12, 13)
-      this.logg(bar1)
-      bar1.visited = true;
-      this.logg(bar1)
+      console.log(this.getAllShortestPath());
+      console.log(this.getShortestPath('d'));
     }
 
     logg(obj, text = ""){

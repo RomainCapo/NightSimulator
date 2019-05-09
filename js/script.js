@@ -71,11 +71,10 @@ var options = {
 
 var network = new vis.Network(container, data, options);//Initialisation du reseau
 
-Graph.initEdgesLabel(nodes, edges);
-edges.update([{id:0, label:'800'}])
-let g = new Graph(nodes, edges);//création du graphe
-//g.test();
-g.getAllShortestPathFromDijkstra('a');
+let gr = new GraphRepresentation(nodes, edges);
+gr.initEdgesLabel();
+edges.update([{id:0, label:'800'}]);
+let gc = new GraphComputation(nodes, edges);//création du graphe
 
 let idBarClicked = -1;//id du noeud cliqué, -1 si aucun noeud cliqué
 
@@ -124,7 +123,7 @@ function runClicEvent(){
     let eOpt = document.getElementById('simulationOption');
     let simOpt = eOpt.options[eOpt.selectedIndex].value;
 
-    //g.drawPathOnGraph(smallestPath["path"], edges, nodes);
+    console.log(gc.getAllShortestPaths(idBarClicked));
 
     isSimulationMode = true;
 
@@ -137,7 +136,7 @@ function runClicEvent(){
  * evenement lors du clic sur le bouton de fermeture de la simulation
  */
 function exitClicEvent(){
-  g.resetGraph(nodes, edges);
+  //g.resetGraph(nodes, edges);
 
   isSimulationMode = false;
 
@@ -146,20 +145,20 @@ function exitClicEvent(){
 }
 
 /**
- * permet de genéré en format html la liste deroulante permettant de choisir le nombre de bar voulu pour la simulation
+ * permet de genéré en format html la liste deroulante permettant de choisir le bar voulu pour la simulation
  */
-function generateSelectNbBarHtml(){
-  let node = document.getElementById('nbBar');
-  for(let i = 0; i < (g.listBar.length - 1); i++){
+function generateSelectBarsHtml(){
+  let node = document.getElementById('bars');
+  gr.getAllBarNames().forEach(function(e){
     let option = document.createElement("option");
-    option.text = (i+1).toString();
+    option.text = e;
     node.add(option);
-  }
+  });
 }
 
 /**
  * fonction main du programme
  */
 (function() {
-  generateSelectNbBarHtml();
+  generateSelectBarsHtml();
 })();

@@ -10,48 +10,71 @@
     <script src="bower_components/generatorics/generatorics.js"></script>
     <style type="text/css">
         #mynetwork {
-            width: 1000px;
+          width: auto;
             height: 600px;
             border: 3px solid black;
         }
 
         #barInfo{
           visibility:hidden;
-          position: relative;
-          left: 1350px;
-          top: -600px;
+        }
+
+        .container{
+          max-width: 1500px;
         }
     </style>
   </head>
   <body>
     <div class="container">
       <h1>Night Simulator</h1>
-      <div id="mynetwork"></div>
-      <br>
-      <div id="simulationPanel">
-        <button id="run" type="button" disabled name="button" class="btn btn-primary" onclick="runClicEvent()">Run Simulation Mode</button>
-        <button id="exit" type="button" disabled name="button" class="btn btn-info" onclick="exitClicEvent()">Exit Simulation Mode</button>
-        <label for="nbBar">Number of bar : </label>
-        <select id="nbBar">
-        </select>
-        <label for="simulationOption">Option for the simulation : </label>
-        <select id="simulationOption">
-          <option value="pathLength">Length of the paths</option>
-          <option value="drinkPrice">Price of the drinks</option>
-          <option value="barAmbience">Ambience of the bar</option>
-          <option value="AllOptions">All options</option>
-        </select>
-      </div>
-    </div>
-    <div id="barInfo" class="card ard border-primary mb-3 mb-3" style="max-width: 18rem;">
-      <div class="card-header" id="barName">Bar name</div>
-        <div class="card-body">
-          <p class="card-text" id="barContent">Content</p>
+      <div class="row">
+        <div class="col-2">
+          <div id="simulationPanel">
+            <div class="radio">
+              <label for="allShortestPaths">Find all shortest path : <input id="allShortestPaths" type="radio" name="simulation" value="allShortestPaths"></label>
+            </div>
+            <div class="radio">
+              <label for="shortestPath">Find the shortest path : <input id="shortestPath" type="radio" name="simulation" value="shortestPaths"></label>
+            </div>
+            <div class="form-group">
+             <label for="bars">To : </label>
+             <select class="form-control" id="bars">
+             </select>
+            </div>
+            <br>
+            <button id="run" type="button" disabled name="button" class="btn btn-primary" onclick="runClicEvent()">Run Simulation Mode</button>
+            <br>
+            <br>
+            <button id="exit" type="button" disabled name="button" class="btn btn-info" onclick="exitClicEvent()">Exit Simulation Mode</button>
+            <!--<label for="nbBar">Number of bar : </label>
+            <select id="nbBar">
+            </select>
+            <label for="simulationOption">Option for the simulation : </label>
+            <select id="simulationOption">
+              <option value="pathLength">Length of the paths</option>
+              <option value="drinkPrice">Price of the drinks</option>
+              <option value="barAmbience">Ambience of the bar</option>
+              <option value="AllOptions">All options</option>
+            </select>-->
+          </div>
+        </div>
+        <div class="col-8">
+          <div id="mynetwork"></div>
+        </div>
+        <div class="col-2">
+          <div id="barInfo" class="card ard border-primary mb-3 mb-3" style="max-width: 18rem;">
+            <div class="card-header" id="barName">Bar name</div>
+              <div class="card-body">
+                <p class="card-text" id="barContent">Content</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <script src="js/bar.js"></script>
     <script src="js/priorityQueue.js"></script>
-    <script src="js/graph.js"></script>
+    <script src="js/graphRepresentation.js"></script>
+    <script src="js/graphComputation.js"></script>
     <script src="js/script.js"></script>
   </body>
 </html>
