@@ -8,21 +8,21 @@ var nodes = new vis.DataSet([
 {id: 'c', label: 'Glenn', drinkPriceAvg:5, ambience:6, x: 200, y: 55},
 {id: 'd', label: 'Charlot', drinkPriceAvg:7, ambience:4, x: 100, y: 120},
 {id: 'e', label: 'Brasseur', drinkPriceAvg:8, ambience:6, x: 300, y: 60},
-{id: 'f', label: '21', drinkPriceAvg:6, ambience:7,x: 650, y: 60},
+/*{id: 'f', label: '21', drinkPriceAvg:6, ambience:7,x: 650, y: 60},
 {id: 'g', label: 'King Du Lac', drinkPriceAvg:6, ambience:7, x: 400, y: 210},
-{id: 'h', label: 'Waves', drinkPriceAvg:11, ambience:4, x: 580, y: 150}
+{id: 'h', label: 'Waves', drinkPriceAvg:11, ambience:4, x: 580, y: 150}*/
 ]);
 
 // creations d'un tableau avec les cotes
 var edges = new vis.DataSet([
-{id:0, from:'a', to:'g'},
-{id:1, from:'a', to:'b'},
-{id:2, from:'b', to:'c'},
-{id:3, from:'b', to:'d'},
-{id:4, from:'d', to:'c'},
-{id:5, from:'a', to:'e'},
-{id:6, from:'d', to:'c'},
-{id:7, from:'e', to:'c'},
+{id:0, from:'a', to:'b'},
+{id:1, from:'b', to:'c'},
+{id:2, from:'b', to:'d'},
+{id:3, from:'d', to:'c'},
+{id:4, from:'a', to:'e'},
+{id:5, from:'d', to:'c'},
+{id:6, from:'e', to:'c'},
+/*{id:7, from:'a', to:'g'},
 {id:8, from:'c', to:'g'},
 {id:9, from:'d', to:'g'},
 {id:10, from:'e', to:'g'},
@@ -33,7 +33,7 @@ var edges = new vis.DataSet([
 {id:15, from:'a', to:'h'},
 {id:16, from:'f', to:'g'},
 {id:17, from:'e', to:'f'},
-{id:18, from:'h', to:'f'},
+{id:18, from:'h', to:'f'},*/
 ]);
 
 //creation du reseau
@@ -72,7 +72,7 @@ var network = new vis.Network(container, data, options);//Initialisation du rese
 
 Graph.initEdgesLabel(nodes, edges);
 let g = new Graph(nodes, edges);//création du graphe
-g.dijkstra('a')
+g.dijkstra('a');
 
 let idBarClicked = -1;//id du noeud cliqué, -1 si aucun noeud cliqué
 

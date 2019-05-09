@@ -13,7 +13,6 @@ class Graph {
 
     this._loadBarsFromJson(nodes);
     this._loadEdgesFromJson(edges);
-    console.log(this.contigMatrix);
   }
 
 //================================================================================
@@ -148,13 +147,15 @@ _resetBar(){
     this._resetBar();
     let priorityQueue = new PriorityQueue();
     priorityQueue.enqueue(this.listBar[this._getIdFromString(id)], 0);
-    console.log(priorityQueue);
-    /*while(!priorityQueue.isEmpty()){
+
+    while(!priorityQueue.isEmpty()){
       let qE = priorityQueue.dequeue();
       let bar = qE.element;
       let priority = qE.priority;
+      let idParent = qE.idParent;
 
       bar.visited = true;
+      this.logg(bar);
 
       let neighbours = this._getNeighbours(bar.id);
       for(let i = 0; i < neighbours.length; i++){
@@ -162,7 +163,7 @@ _resetBar(){
           priorityQueue.enqueue(neighbours[i]["bar"], priority + neighbours[i]["priority"]);
         }
       }
-    }*/
+    }
   }
 
 // /**
@@ -178,23 +179,24 @@ _resetBar(){
 //     return string;
 //   }
 //
-//   /**
-//    * permet d'obtenir tout les voisins d'un sommet pour un id donné
-//    * @param  {number} idBar id fu bar
-//    * @return {array}       tableau associatif contenant pour chaque case l'objet representant le bar, ainsi que la priorite du chemin le reliant
-//    */
-//     _getNeighbours(idBar){
-//       let neighbours = [];
-//       for(let i = 0; i < this.contigMatrix[idBar].length; i++){
-//         if(this.contigMatrix[idBar][i] != 0){
-//           let tmp = new Array(2);
-//           tmp["bar"] = this.listBar[i];
-//           tmp["priority"] = this.contigMatrix[idBar][i];
-//           neighbours.push(tmp);
-//         }
-//       }
-//       return neighbours;
-//     }
+  /**
+   * permet d'obtenir tout les voisins d'un sommet pour un id donné
+   * @param  {string} idBar id du bar
+   * @return {array}       tableau associatif contenant pour chaque case l'objet representant le bar, ainsi que la priorite du chemin le reliant
+   */
+    _getNeighbours(idBar){
+      let intIdBar = this._getIdFromString(idBar);
+      let neighbours = [];
+      for(let i = 0; i < this.contigMatrix[intIdBar].length; i++){
+        if(this.contigMatrix[intIdBar][i] != 0){
+          let tmp = new Array(2);
+          tmp["bar"] = this.listBar[i];
+          tmp["priority"] = this.contigMatrix[intIdBar][i];
+          neighbours.push(tmp);
+        }
+      }
+      return neighbours;
+    }
 
     static initEdgesLabel(nodes, edges){
     let length = Object.keys(edges._data).length;
@@ -211,7 +213,13 @@ _resetBar(){
       return Math.ceil(Math.sqrt(Math.pow(node2.x - node1.x, 2) + Math.pow(node2.y - node1.y, 2)));
     }
 
+//================================================================================
+// Méthode de debug
+//================================================================================
     test(){
-      console.log(this._getIdFromString('b'));
+    }
+
+    logg(obj){
+      console.log(JSON.stringify(obj));
     }
 }

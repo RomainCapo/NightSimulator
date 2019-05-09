@@ -16,5 +16,6 @@ class Bar {
     this.ambience = ambience;
     this.visited = false;
     this.meeted = false;
+    this.idParent = 'none';
   }
 }
