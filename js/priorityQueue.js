@@ -7,10 +7,9 @@ class QElement{
    * @param {object} element  objet contenu dans la file de prioritée
    * @param {number} priority priorité de l'element en question
    */
-  constructor(element, priority, idParent){
+  constructor(element, priority){
     this.element = element;
     this.priority = priority;
-    this.idParent = idParent;
   }
 }
 
@@ -31,8 +30,8 @@ class PriorityQueue{
  * @param  {object} element  objet a placé dans la file
  * @param  {number} priority priorité de l'element dans la file
  */
-  enqueue(element, priority, idParent = 'none'){
-    var qElement = new QElement(element, priority, idParent);
+  enqueue(element, priority){
+    var qElement = new QElement(element, priority);
     var contain = false;
 
     for (var i = 0; i < this.items.length; i++) {
@@ -44,6 +43,16 @@ class PriorityQueue{
     }
     if (!contain) {
         this.items.push(qElement);
+    }
+  }
+
+  getPriority(element){
+    for(let i = 0; i < this.items.length; i++)
+    {
+      if(JSON.stringify(element) === JSON.stringify(this.items[i].element) )
+      {
+        return this.items[i].priority;
+      }
     }
   }
 

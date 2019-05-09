@@ -74,8 +74,8 @@ var network = new vis.Network(container, data, options);//Initialisation du rese
 Graph.initEdgesLabel(nodes, edges);
 edges.update([{id:0, label:'800'}])
 let g = new Graph(nodes, edges);//création du graphe
-g.test();
-//g.dijkstra('a');
+//g.test();
+g.getAllShortestPathFromDijkstra('a');
 
 let idBarClicked = -1;//id du noeud cliqué, -1 si aucun noeud cliqué
 

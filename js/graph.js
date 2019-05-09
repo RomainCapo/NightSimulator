@@ -140,31 +140,61 @@ _resetBar(){
     for(let i = 0; i < this.listBar.length; i++){
       this.listBar[i].visited = false;
       this.listBar[i].meeted = false;
+      this.listBar[i].idParent = "none";
     }
   }
 
   dijkstra(id){
+    let tmp = [];
     this._resetBar();
+
+    //on créé la file de priorité, on empile le 1er sommet et on l'indique comme rencontré
     let priorityQueue = new PriorityQueue();
     priorityQueue.enqueue(this.listBar[this._getIdFromString(id)], 0);
+    this.listBar[this._getIdFromString(id)].meeted = true;
 
     while(!priorityQueue.isEmpty()){
-      this.logg(priorityQueue, "prio : ");
+      //this.logg(priorityQueue, "prio : ");
       let qE = priorityQueue.dequeue();
-      let bar = qE.element;
-      let priority = qE.priority;
+      let currentBar = qE.element;
+      let currentPriority = qE.priority;
       let idParent = qE.idParent;
 
-      bar.visited = true;
-      this.logg(bar, "bar : ");
+      currentBar.visited = true;
+      tmp.push(currentBar.name);
+      //this.logg(currentBar, "visited bar : ");
 
-      let neighbours = this._getNeighbours(bar.id);
+      let neighbours = this._getNeighbours(currentBar.id);
       for(let i = 0; i < neighbours.length; i++){
-        if(!neighbours[i]["bar"].visited){
-          priorityQueue.enqueue(neighbours[i]["bar"], priority + neighbours[i]["priority"]);
+        let neighbourBar = neighbours[i]["bar"];
+        let neighbourPriority = neighbours[i]["priority"]
+
+        if(!neighbourBar.visited){
+          let priority = currentPriority + neighbourPriority;
+
+          if(!neighbourBar.meeted){
+            priorityQueue.enqueue(neighbourBar, priority);
+            neighbourBar.idParent = currentBar.id;
+            neighbourBar.meeted = true;
+          }else {
+            if(priority < priorityQueue.getPriority(neighbourBar)){
+              priorityQueue.decreasePriority(neighbourBar, priority);
+              neighbourBar.idParent = currentBar.id;
+            }
+          }
         }
       }
     }
+    //console.log(tmp);
+  }
+
+  getAllShortestPathFromDijkstra(id){
+    /*this.dijkstra(id);
+    let paths = [];
+    this.listBar.forEach(function(e){
+      let path += e.id
+      this.logg(e);
+    }, this);*/
   }
 
 // /**
@@ -219,7 +249,7 @@ _resetBar(){
 //================================================================================
     test(){
 
-      let pq = new PriorityQueue();
+    /*  let pq = new PriorityQueue();
       let bar1 = new Bar('a', 'test', 12, 13)
       let bar2 = new Bar('b', 'test3', 612, 13)
       let bar3 = new Bar('c', 'test4', 12, 163)
@@ -230,6 +260,12 @@ _resetBar(){
 
       pq.decreasePriority(bar2, 5);
       this.logg(pq);
+
+      console.log(pq.getPriority(bar1));*/
+      let bar1 = new Bar('a', 'test', 12, 13)
+      this.logg(bar1)
+      bar1.visited = true;
+      this.logg(bar1)
     }
 
     logg(obj, text = ""){
