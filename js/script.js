@@ -117,13 +117,31 @@ network.on('deselectNode', function(properties){
  */
 function runClicEvent(){
   if(idBarClicked != -1){
-    let eBar = document.getElementById('nbBar');
-    let nbBar = eBar.options[eBar.selectedIndex].text;
+    /*let eBar = document.getElementById('nbBar');
+    let nbBar = eBar.options[eBar.selectedIndex].text;*/
 
-    let eOpt = document.getElementById('simulationOption');
-    let simOpt = eOpt.options[eOpt.selectedIndex].value;
+    /*let eOpt = document.getElementById('simulationOption');
+    let simOpt = eOpt.options[eOpt.selectedIndex].value;*/
 
-    console.log(gc.getAllShortestPaths(idBarClicked));
+    let selectedRadio = document.querySelector('input[name="simulation"]:checked').value;
+
+    switch (selectedRadio) {
+      case 'allShortestPaths':
+        let simulationResult = gc.getAllShortestPaths(idBarClicked);
+        //console.log(simulationResult);
+
+        let result = document.getElementById('result');
+        for(let i = 0; i < simulationResult.length; i++){
+          result.innerHTML = simulationResult[i]
+        }
+
+        break;
+
+      case 'shortestPath':
+        break;
+      default:
+
+    }
 
     isSimulationMode = true;
 

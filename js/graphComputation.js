@@ -171,6 +171,10 @@ _resetBar(){
     return paths;
   }
 
+  getFullNamePaths(paths){
+    paths.fo
+  }
+
 // /**
 //  * permet de convertir les voisins d'un sommet sous la forme d'une chaine de caractere
 //  * @param  {array} neighbours tableau contenant les voisins d'un sommet
