@@ -1,3 +1,11 @@
+/*
+* Romain Capocasale
+* INF2dlm-A
+* He-Arc
+* 15.05.2019
+* NightSimulator
+ */
+
 //gloabl varaible
 let isSimulationMode = false;
 
@@ -108,7 +116,6 @@ network.on('deselectNode', function(properties){
       nodes.update({id:deselectedNodeId, color:'#5bc0de'});
       document.getElementById("run").disabled = true;
     }
-
     document.getElementById('barInfo').style.visibility = "hidden";
 });
 
@@ -117,27 +124,23 @@ network.on('deselectNode', function(properties){
  */
 function runClicEvent(){
   if(idBarClicked != -1){
-    /*let eBar = document.getElementById('nbBar');
-    let nbBar = eBar.options[eBar.selectedIndex].text;*/
-
-    /*let eOpt = document.getElementById('simulationOption');
-    let simOpt = eOpt.options[eOpt.selectedIndex].value;*/
-
     let selectedRadio = document.querySelector('input[name="simulation"]:checked').value;
 
     switch (selectedRadio) {
       case 'allShortestPaths':
-        let simulationResult = gc.getAllShortestPaths(idBarClicked);
-        //console.log(simulationResult);
-
         let result = document.getElementById('result');
-        for(let i = 0; i < simulationResult.length; i++){
-          result.innerHTML = simulationResult[i]
-        }
 
+        let simulationResult = gc.getAllShortestPaths(idBarClicked);
+
+        result.innerHTML = gr.showSmallestPaths(simulationResult);
         break;
 
       case 'shortestPath':
+        let e = document.getElementById("bars");
+        let idBarSelected = e.options[e.selectedIndex].value;
+
+        let smallestPath = gc.getShortestPath(idBarClicked, idBarSelected);
+        gr.drawPathOnGraph(smallestPath);
         break;
       default:
 
@@ -154,9 +157,11 @@ function runClicEvent(){
  * evenement lors du clic sur le bouton de fermeture de la simulation
  */
 function exitClicEvent(){
-  //g.resetGraph(nodes, edges);
+  gr.resetGraph();
 
   isSimulationMode = false;
+
+  document.getElementById('result').innerHTML = '';
 
   document.getElementById("exit").disabled = true;
   document.getElementById("run").disabled = false;
@@ -170,6 +175,7 @@ function generateSelectBarsHtml(){
   gr.getAllBarNames().forEach(function(e){
     let option = document.createElement("option");
     option.text = e;
+    option.value = gr.getIdFromName(e);
     node.add(option);
   });
 }

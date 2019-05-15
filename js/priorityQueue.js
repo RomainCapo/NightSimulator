@@ -1,3 +1,10 @@
+/*
+* Romain Capocasale
+* INF2dlm-A
+* He-Arc
+* 15.05.2019
+* NightSimulator
+ */
 /**
  * Classe qui représente un élément qui sera plcaé dans la file de priorité
  */
@@ -46,6 +53,11 @@ class PriorityQueue{
     }
   }
 
+  /**
+   * Retourne la priorité d'un sommet passé en parametre
+   * @param  {object} element object d'on on souhaite connaitre la priorité
+   * @return {number}         priotité du sommet
+   */
   getPriority(element){
     for(let i = 0; i < this.items.length; i++)
     {
@@ -56,6 +68,11 @@ class PriorityQueue{
     }
   }
 
+  /**
+   * Change la priorité du sommet passé en parametre
+   * @param  {object} element  object ou l'as priotié doit changer
+   * @param  {number} priority nouvelle priorite de l'objet
+   */
   decreasePriority(element, priority, idParent){
     for(let i = 0; i < this.items.length; i++)
     {
@@ -65,7 +82,7 @@ class PriorityQueue{
       }
     }
 
-    this.enqueue(element, priority, idParent);
+    this.enqueue(element, priority);
   }
 
 

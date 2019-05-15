@@ -1,3 +1,10 @@
+/*
+* Romain Capocasale
+* INF2dlm-A
+* He-Arc
+* 15.05.2019
+* NightSimulator
+ */
 /**
  * classe permettant de faire des calcules sur un graphe
  */
