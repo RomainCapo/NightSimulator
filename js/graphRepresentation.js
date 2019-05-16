@@ -128,6 +128,10 @@ class GraphRepresentation{
   return string;
 }
 
+colorNode(idNode, colorNode){
+  this.nodes.update({id:idNode, color:colorNode});
+}
+
   //================================================================================
   // Dessin du chemin
   //================================================================================

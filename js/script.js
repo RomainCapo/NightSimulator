@@ -126,20 +126,29 @@ function runClicEvent(){
   if(idBarClicked != -1){
     let selectedRadio = document.querySelector('input[name="simulation"]:checked').value;
 
+    //ASP : All Shortest Paths
     switch (selectedRadio) {
       case 'allShortestPaths':
+        let eCritASP = document.getElementById("criterion");
+        let critASP = eCritASP.options[eCritASP.selectedIndex].value;
+
+        let simulationResult = gc.getAllShortestPaths(idBarClicked, critASP);
+
+        gr.colorNode(idBarClicked, '#5cb85c');
+
         let result = document.getElementById('result');
-
-        let simulationResult = gc.getAllShortestPaths(idBarClicked);
-
         result.innerHTML = gr.showSmallestPaths(simulationResult);
         break;
 
+      // Shortest Path
       case 'shortestPath':
-        let e = document.getElementById("bars");
-        let idBarSelected = e.options[e.selectedIndex].value;
+        let eBars = document.getElementById("bars");
+        let idBarSelected = eBars.options[eBars.selectedIndex].value;
 
-        let smallestPath = gc.getShortestPath(idBarClicked, idBarSelected);
+        let eCritSP = document.getElementById("criterion");
+        let critSP = eCritSP.options[eCritSP.selectedIndex].value;
+
+        let smallestPath = gc.getShortestPath(idBarClicked, idBarSelected, critSP);
         gr.drawPathOnGraph(smallestPath);
         break;
       default:
