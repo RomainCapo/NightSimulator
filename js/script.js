@@ -122,6 +122,8 @@ function runClicEvent(){
 
     /*let eOpt = document.getElementById('simulationOption');
     let simOpt = eOpt.options[eOpt.selectedIndex].value;*/
+	
+	console.log(gc.getAllShortestPaths(idBarClicked));
 
     let selectedRadio = document.querySelector('input[name="simulation"]:checked').value;
 
