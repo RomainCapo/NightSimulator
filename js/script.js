@@ -11,38 +11,37 @@ let isSimulationMode = false;
 
 // creation d'un tableau avec les noeuds
 var nodes = new vis.DataSet([
-{id: 'a', label: 'Inside', drinkPriceAvg:8, ambience:9, x: 350, y: 0},
-{id: 'b', label: 'Cerf', drinkPriceAvg:6, ambience:8, x: 90, y: 50},
-{id: 'c', label: 'Glenn', drinkPriceAvg:5, ambience:6, x: 200, y: 55},
-{id: 'd', label: 'Charlot', drinkPriceAvg:7, ambience:4, x: 100, y: 120},
-{id: 'e', label: 'Brasseur', drinkPriceAvg:8, ambience:6, x: 300, y: 60},
-//{id: 'f', label: 'McDo', drinkPriceAvg:6, ambience:8, x: 200, y: 30},
-/*{id: 'f', label: '21', drinkPriceAvg:6, ambience:7,x: 650, y: 60},
-{id: 'g', label: 'King Du Lac', drinkPriceAvg:6, ambience:7, x: 400, y: 210},
-{id: 'h', label: 'Waves', drinkPriceAvg:11, ambience:4, x: 580, y: 150}*/
+{id: 'a', label: 'Republic Bar', drinkPriceAvg:12, ambience:9, x: 870, y: 0},
+{id: 'b', label: 'Inside', drinkPriceAvg:10, ambience:9, x: 420, y: 50},
+{id: 'c', label: 'Cerf', drinkPriceAvg:8, ambience:7, x: 290, y: 140},
+{id: 'd', label: 'Glenn', drinkPriceAvg:5, ambience:5, x: 400, y: 105},
+{id: 'e', label: 'Seven', drinkPriceAvg:12, ambience:10, x: 475, y: 110},
+{id: 'f', label: 'Prestige', drinkPriceAvg:6, ambience:4, x: 250, y: 190},
+{id: 'g', label: 'Charlot', drinkPriceAvg:7, ambience:3, x: 320, y: 210},
+{id: 'h', label: 'Brasseur', drinkPriceAvg:8, ambience:5, x: 530, y: 170},
+{id: 'i', label: 'Vibes Club', drinkPriceAvg:12, ambience:9, x: 630, y: 140},
+{id: 'j', label: 'Bart', drinkPriceAvg:9, ambience:6,x: 720, y: 200},
+{id: 'k', label: '21', drinkPriceAvg:6, ambience:7,x: 750, y: 150},
+{id: 'l', label: 'King Du Lac', drinkPriceAvg:6, ambience:8, x: 600, y: 260},
+{id: 'm', label: 'Bassin Bleu', drinkPriceAvg:8, ambience:5, x: 500, y: 280},
+{id: 'n', label: 'Waves', drinkPriceAvg:15, ambience:4, x: 720, y: 300},
+{id: 'o', label: 'Case a choc', drinkPriceAvg:11, ambience:10, x: 0, y: 140}
 ]);
 
 // creations d'un tableau avec les cotes
 var edges = new vis.DataSet([
-{id:0, from:'a', to:'b'},
-{id:1, from:'b', to:'c'},
-{id:2, from:'b', to:'d'},
-{id:3, from:'d', to:'c'},
-{id:4, from:'a', to:'e'},
-{id:5, from:'d', to:'c'},
-{id:6, from:'e', to:'c'},
-/*{id:7, from:'a', to:'g'},
-{id:8, from:'c', to:'g'},
-{id:9, from:'d', to:'g'},
-{id:10, from:'e', to:'g'},
-{id:11, from:'g', to:'h'},
-{id:12, from:'e', to:'h'},
-{id:13, from:'a', to:'h'},
-{id:14, from:'a', to:'f'},
-{id:15, from:'a', to:'h'},
-{id:16, from:'f', to:'g'},
-{id:17, from:'e', to:'f'},
-{id:18, from:'h', to:'f'},*/
+{id:0, from:'a', to:'b'}, {id:1, from:'a', to:'k'}, {id:2, from:'a', to:'i'},
+{id:3, from:'b', to:'c'}, {id:4, from:'b', to:'d'}, {id:5, from:'b', to:'e'},
+{id:6, from:'c', to:'f'}, {id:7, from:'c', to:'g'},
+{id:8, from:'d', to:'c'}, {id:9, from:'d', to:'h'}, {id:10, from:'d', to:'e'}, {id:11, from:'d', to:'g'},
+{id:12, from:'e', to:'a'}, {id:13, from:'e', to:'h'}, {id:14, from:'e', to:'i'},
+{id:15, from:'f', to:'g'},
+{id:16, from:'g', to:'h'}, {id:17, from:'g', to:'l'}, {id:18, from:'g', to:'m'},
+{id:19, from:'h', to:'i'}, {id:20, from:'h', to:'l'},
+{id:21, from:'i', to:'n'}, {id:22, from:'i', to:'l'}, {id:23, from:'i', to:'j'}, {id:24, from:'i', to:'k'},
+{id:25, from:'j', to:'k'}, {id:26, from:'j', to:'n'},
+{id:27, from:'l', to:'m'}, {id:28, from:'l', to:'n'},
+{id:29, from:'o', to:'c'}, {id:30, from:'o', to:'f'},
 ]);
 
 //creation du reseau
@@ -81,7 +80,6 @@ var network = new vis.Network(container, data, options);//Initialisation du rese
 
 let gr = new GraphRepresentation(nodes, edges);
 gr.initEdgesLabel();
-edges.update([{id:0, label:'800'}]);
 let gc = new GraphComputation(nodes, edges);//création du graphe
 
 let idBarClicked = -1;//id du noeud cliqué, -1 si aucun noeud cliqué
