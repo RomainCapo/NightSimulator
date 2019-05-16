@@ -1,3 +1,10 @@
+/*
+* Romain Capocasale
+* INF2dlm-A
+* He-Arc
+* 15.05.2019
+* NightSimulator
+ */
 /**
  * classe permettant de faire des calcules sur un graphe
  */
@@ -83,11 +90,62 @@ _resetBar(){
     }
   }
 
+// /**
+//  * execution de l'algorithme de dijkstra, on cherche les chemins les plus court entre un sommet initial et tous les autres sommets
+//  * @param  {string} id du bar a partir du quel on execute l'algorithme
+//  */
+//   _dijkstra(id){
+//     let tmp = [];
+//     this._resetBar();
+//
+//     //on créé la file de priorité, on empile le 1er sommet et on l'indique comme rencontré
+//     let priorityQueue = new PriorityQueue();
+//     priorityQueue.enqueue(this.listBar[this._getIdFromString(id)], 0);
+//     this.listBar[this._getIdFromString(id)].meeted = true;
+//
+//     while(!priorityQueue.isEmpty()){
+//       let qE = priorityQueue.dequeue();
+//       let currentBar = qE.element;
+//       let currentPriority = qE.priority;
+//       let idParent = qE.idParent;
+//
+//       currentBar.visited = true;
+//       tmp.push(currentBar.name);
+//
+//       let neighbours = this._getNeighbours(currentBar.id);
+//       for(let i = 0; i < neighbours.length; i++){
+//         let neighbourBar = neighbours[i]["bar"];
+//         let neighbourPriority = neighbours[i]["priority"]
+//
+//         if(!neighbourBar.visited){
+//           let priority = currentPriority + neighbourPriority;
+//
+//           if(!neighbourBar.meeted){
+//             priorityQueue.enqueue(neighbourBar, priority);
+//             neighbourBar.idParent = currentBar.id;
+//             neighbourBar.meeted = true;
+//           }else {
+//             if(priority < priorityQueue.getPriority(neighbourBar)){
+//               priorityQueue.decreasePriority(neighbourBar, priority);
+//               neighbourBar.idParent = currentBar.id;
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+//
+//
+
+priorityFunction(){
+
+}
+
 /**
  * execution de l'algorithme de dijkstra, on cherche les chemins les plus court entre un sommet initial et tous les autres sommets
  * @param  {string} id du bar a partir du quel on execute l'algorithme
  */
-  _dijkstra(id){
+  _dijkstra(id, criterion){
     let tmp = [];
     this._resetBar();
 
@@ -97,7 +155,6 @@ _resetBar(){
     this.listBar[this._getIdFromString(id)].meeted = true;
 
     while(!priorityQueue.isEmpty()){
-      //this.logg(priorityQueue, "prio : ");
       let qE = priorityQueue.dequeue();
       let currentBar = qE.element;
       let currentPriority = qE.priority;
@@ -105,12 +162,27 @@ _resetBar(){
 
       currentBar.visited = true;
       tmp.push(currentBar.name);
-      //this.logg(currentBar, "visited bar : ");
 
       let neighbours = this._getNeighbours(currentBar.id);
       for(let i = 0; i < neighbours.length; i++){
         let neighbourBar = neighbours[i]["bar"];
-        let neighbourPriority = neighbours[i]["priority"]
+        let neighbourPriority = 0;
+
+        switch (criterion) {
+          case 'distance':
+             neighbourPriority = neighbours[i]["priority"];
+            break;
+          case 'drinkPriceAvg':
+            neighbourPriority = neighbourBar.drinkPriceAvg;
+            break;
+          case 'ambience':
+            neighbourPriority = neighbourBar.ambience;
+            break;
+          case 'allCriterions':
+            neighbourPriority = neighbours[i]["priority"] + neighbourBar.drinkPriceAvg + neighbourBar.ambience;
+            break;
+        }
+        //let neighbourPriority = neighbourBar.drinkPriceAvg;
 
         if(!neighbourBar.visited){
           let priority = currentPriority + neighbourPriority;
@@ -128,7 +200,6 @@ _resetBar(){
         }
       }
     }
-    //console.log(tmp);
   }
 
 /**
@@ -152,8 +223,8 @@ _resetBar(){
  * @param  {string} endId   id du somment final
  * @return {string}         retourne le chemin le plus court entre 2 sommets.
  */
-  getShortestPath(startId, endId){
-    this._dijkstra(startId);
+  getShortestPath(startId, endId, criterion){
+    this._dijkstra(startId, criterion);
     return this._getShortestPathRecursive(endId).split("").reverse().join("");//permet de renverser le string renvoyer par la fonction
   }
 
@@ -162,32 +233,14 @@ _resetBar(){
  * @param  {string} startId id du sommet initial
  * @return {array}         tableau contenant tous les chemins les plus court pour atteindre pour atteindre tous les sommets du graphe a partir d'un sommet initial.
  */
-  getAllShortestPaths(startId){
-    this._dijkstra(startId);
+  getAllShortestPaths(startId, criterion){
+    this._dijkstra(startId, criterion);
     let paths = [];
     this.listBar.forEach(function(e){
       paths[e.id] = this._getShortestPathRecursive(e.id).split("").reverse().join("");
     }, this);
     return paths;
   }
-
-  getFullNamePaths(paths){
-    paths.fo
-  }
-
-// /**
-//  * permet de convertir les voisins d'un sommet sous la forme d'une chaine de caractere
-//  * @param  {array} neighbours tableau contenant les voisins d'un sommet
-//  * @return {string}   retourne les voisins
-//  */
-//   _getNeighboursInString(neighbours){
-//     let string = "";
-//     for(let i = 0; i < neighbours.length;i++){
-//       string += neighbours[i]["bar"].id;
-//     }
-//     return string;
-//   }
-//
   /**
    * permet d'obtenir tout les voisins d'un sommet pour un id donné
    * @param  {string} idBar id du bar

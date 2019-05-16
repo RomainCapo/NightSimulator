@@ -1,3 +1,11 @@
+/*
+* Romain Capocasale
+* INF2dlm-A
+* He-Arc
+* 15.05.2019
+* NightSimulator
+ */
+
 //gloabl varaible
 let isSimulationMode = false;
 
@@ -108,7 +116,6 @@ network.on('deselectNode', function(properties){
       nodes.update({id:deselectedNodeId, color:'#5bc0de'});
       document.getElementById("run").disabled = true;
     }
-
     document.getElementById('barInfo').style.visibility = "hidden";
 });
 
@@ -117,29 +124,32 @@ network.on('deselectNode', function(properties){
  */
 function runClicEvent(){
   if(idBarClicked != -1){
-    /*let eBar = document.getElementById('nbBar');
-    let nbBar = eBar.options[eBar.selectedIndex].text;*/
-
-    /*let eOpt = document.getElementById('simulationOption');
-    let simOpt = eOpt.options[eOpt.selectedIndex].value;*/
-	
-	console.log(gc.getAllShortestPaths(idBarClicked));
-
     let selectedRadio = document.querySelector('input[name="simulation"]:checked').value;
 
+    //ASP : All Shortest Paths
     switch (selectedRadio) {
       case 'allShortestPaths':
-        let simulationResult = gc.getAllShortestPaths(idBarClicked);
-        //console.log(simulationResult);
+        let eCritASP = document.getElementById("criterion");
+        let critASP = eCritASP.options[eCritASP.selectedIndex].value;
+
+        let simulationResult = gc.getAllShortestPaths(idBarClicked, critASP);
+
+        gr.colorNode(idBarClicked, '#5cb85c');
 
         let result = document.getElementById('result');
-        for(let i = 0; i < simulationResult.length; i++){
-          result.innerHTML = simulationResult[i]
-        }
-
+        result.innerHTML = gr.showSmallestPaths(simulationResult);
         break;
 
+      // Shortest Path
       case 'shortestPath':
+        let eBars = document.getElementById("bars");
+        let idBarSelected = eBars.options[eBars.selectedIndex].value;
+
+        let eCritSP = document.getElementById("criterion");
+        let critSP = eCritSP.options[eCritSP.selectedIndex].value;
+
+        let smallestPath = gc.getShortestPath(idBarClicked, idBarSelected, critSP);
+        gr.drawPathOnGraph(smallestPath);
         break;
       default:
 
@@ -156,9 +166,11 @@ function runClicEvent(){
  * evenement lors du clic sur le bouton de fermeture de la simulation
  */
 function exitClicEvent(){
-  //g.resetGraph(nodes, edges);
+  gr.resetGraph();
 
   isSimulationMode = false;
+
+  document.getElementById('result').innerHTML = '';
 
   document.getElementById("exit").disabled = true;
   document.getElementById("run").disabled = false;
@@ -172,6 +184,7 @@ function generateSelectBarsHtml(){
   gr.getAllBarNames().forEach(function(e){
     let option = document.createElement("option");
     option.text = e;
+    option.value = gr.getIdFromName(e);
     node.add(option);
   });
 }
