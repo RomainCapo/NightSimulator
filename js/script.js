@@ -192,4 +192,9 @@ function generateSelectBarsHtml(){
  */
 (function() {
   generateSelectBarsHtml();
+  let maxDrinkPrice = gc.getMaxDrinkPrice();
+  let minDrinkPrice = gc.getMinDrinkPrice();
+  let maxAmbience = gc.getMaxAmbience();
+  let minAmbience = gc.getMinAmbience();
+  document.getElementById('barStatContent').innerHTML = "<ul><li>Max drink price : <strong>"+ maxDrinkPrice[0] +"</strong></li>" + "<li>Min drink price : <strong>"+ minDrinkPrice[0] +"</strong></li>" + "<li>Max ambience : <strong>"+ maxAmbience[0] +"</strong></li>" + "<li>Min ambience : <strong>"+ minAmbience[0] +"</strong></li></ul>";
 })();

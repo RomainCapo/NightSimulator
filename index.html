@@ -27,15 +27,17 @@ NightSimulator
         }
 
         .container{
-          max-width: 1500px;
+          max-width: 1600px;
         }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>Night Simulator</h1>
+      <br>
+      <h1><p class="text-center"><i>Night Simulator</i></p></h1>
+      <br><br>
       <div class="row">
-        <div class="col-2">
+        <div class="col-3">
           <div id="simulationPanel">
             <div class="radio">
               <label for="allShortestPaths">Find all shortest path : <input id="allShortestPaths" type="radio" name="simulation" value="allShortestPaths" checked="checked"></label>
@@ -64,10 +66,16 @@ NightSimulator
             <button id="exit" type="button" disabled name="button" class="btn btn-info" onclick="exitClicEvent()">Exit Simulation Mode</button>
           </div>
         </div>
-        <div class="col-8">
+        <div class="col-6">
           <div id="mynetwork"></div>
         </div>
-        <div class="col-2">
+        <div class="col-3">
+          <div id="barStat" class="card ard border-primary mb-3 mb-3" style="max-width: 18rem;">
+            <div class="card-header">Bar statistics</div>
+              <div class="card-body">
+                <p class="card-text" id="barStatContent"></p>
+            </div>
+          </div>
           <div id="barInfo" class="card ard border-primary mb-3 mb-3" style="max-width: 18rem;">
             <div class="card-header" id="barName">Bar name</div>
               <div class="card-body">

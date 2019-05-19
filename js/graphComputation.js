@@ -70,9 +70,22 @@ class GraphComputation {
   }
 }
 
+_getStringFromID(id){
+  let alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+  if(id > 26){
+    return -1;
+  }else{
+    return alphabet[id];
+  }
+}
+
 _getIdFromString(string){
   let alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
-  return alphabet.indexOf(string);
+  if(string.length > 1){
+    return -1
+  }else{
+    return alphabet.indexOf(string);
+  }
 }
 
 //================================================================================
@@ -89,53 +102,6 @@ _resetBar(){
       this.listBar[i].idParent = "none";
     }
   }
-
-// /**
-//  * execution de l'algorithme de dijkstra, on cherche les chemins les plus court entre un sommet initial et tous les autres sommets
-//  * @param  {string} id du bar a partir du quel on execute l'algorithme
-//  */
-//   _dijkstra(id){
-//     let tmp = [];
-//     this._resetBar();
-//
-//     //on créé la file de priorité, on empile le 1er sommet et on l'indique comme rencontré
-//     let priorityQueue = new PriorityQueue();
-//     priorityQueue.enqueue(this.listBar[this._getIdFromString(id)], 0);
-//     this.listBar[this._getIdFromString(id)].meeted = true;
-//
-//     while(!priorityQueue.isEmpty()){
-//       let qE = priorityQueue.dequeue();
-//       let currentBar = qE.element;
-//       let currentPriority = qE.priority;
-//       let idParent = qE.idParent;
-//
-//       currentBar.visited = true;
-//       tmp.push(currentBar.name);
-//
-//       let neighbours = this._getNeighbours(currentBar.id);
-//       for(let i = 0; i < neighbours.length; i++){
-//         let neighbourBar = neighbours[i]["bar"];
-//         let neighbourPriority = neighbours[i]["priority"]
-//
-//         if(!neighbourBar.visited){
-//           let priority = currentPriority + neighbourPriority;
-//
-//           if(!neighbourBar.meeted){
-//             priorityQueue.enqueue(neighbourBar, priority);
-//             neighbourBar.idParent = currentBar.id;
-//             neighbourBar.meeted = true;
-//           }else {
-//             if(priority < priorityQueue.getPriority(neighbourBar)){
-//               priorityQueue.decreasePriority(neighbourBar, priority);
-//               neighbourBar.idParent = currentBar.id;
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-//
-//
 
 priorityFunction(){
 
@@ -259,6 +225,81 @@ priorityFunction(){
       }
       return neighbours;
     }
+//================================================================================
+// Statistiques du graphes
+//================================================================================
+
+getMaxDrinkPrice(){
+  let barName = "";
+  let max = 0;
+  this.listBar.forEach((e) => {
+    if(max < e.drinkPriceAvg){
+      max = e.drinkPriceAvg;
+      barName = e.name;
+    }
+  });
+  return [barName, max];
+}
+
+getMinDrinkPrice(){
+  let barName = "";
+  let min = this.listBar[0].drinkPriceAvg;
+  this.listBar.forEach((e) => {
+    if(min > e.drinkPriceAvg){
+      min = e.drinkPriceAvg;
+      barName = e.name;
+    }
+  });
+  return [barName, min];
+}
+
+getMaxAmbience(){
+  let barName = "";
+  let max = 0;
+  this.listBar.forEach((e) => {
+    if(max < e.ambience){
+      max = e.ambience;
+      barName = e.name;
+    }
+  });
+  return [barName, max];
+}
+
+getMinAmbience(){
+  let barName = "";
+  let min = this.listBar[0].ambience;
+  this.listBar.forEach((e) => {
+    if(min > e.ambience){
+      min = e.ambience;
+      barName = e.name;
+    }
+  });
+  return [barName, min];
+}
+
+getMaxDist(){
+  let max = 0;
+  for(let i = 0; i < this.contigMatrix.length; i++){
+    for(let j = 0; j < this.contigMatrix.length;j++){
+      if(max < this.contigMatrix[i][j]){
+        max = this.contigMatrix[i][j];
+      }
+    }
+  }
+  return max;
+}
+
+getMinDist(){
+  let min = 0;
+  for(let i = 0; i < this.contigMatrix.length; i++){
+    for(let j = 0; j < this.contigMatrix.length;j++){
+      if(min < this.contigMatrix[i][j]){
+        min = this.contigMatrix[i][j];
+      }
+    }
+  }
+  return min;
+}
 
 //================================================================================
 // Méthode de debug

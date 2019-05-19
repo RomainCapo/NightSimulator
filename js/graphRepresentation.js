@@ -128,13 +128,13 @@ class GraphRepresentation{
   return string;
 }
 
-colorNode(idNode, colorNode){
-  this.nodes.update({id:idNode, color:colorNode});
-}
-
   //================================================================================
   // Dessin du chemin
   //================================================================================
+
+  colorNode(idNode, colorNode){
+    this.nodes.update({id:idNode, color:colorNode});
+  }
 
   /**
    * permet de trouver l'id d'un cote a partir d'un depart et d'une arrivée
