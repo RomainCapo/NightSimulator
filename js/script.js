@@ -191,6 +191,9 @@ function generateSelectBarsHtml(){
  * fonction main du programme
  */
 (function() {
+  console.log(gc.getLongestPathFromMoney('a', 60));
+
+
   generateSelectBarsHtml();
   let maxDrinkPrice = gc.getMaxDrinkPrice();
   let minDrinkPrice = gc.getMinDrinkPrice();

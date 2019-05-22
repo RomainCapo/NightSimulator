@@ -225,6 +225,52 @@ priorityFunction(){
       }
       return neighbours;
     }
+
+
+    getLongestPathFromMoney(id, money){
+      let paths = this.getAllShortestPaths(id, "drinkPriceAvg");
+      let sortedPaths = Object.values(paths);
+
+      const maxPathLength = Math.max.apply(Math, sortedPaths.map(function (el) { return el.length }))
+
+      let longestPathFromMoney = "";
+      let i = maxPathLength;
+      let minPathPrice = -1;
+
+      while(longestPathFromMoney == "" || i == 0){
+        this.getAllPathsOfkLength(sortedPaths, i).forEach((e) =>{
+          let pathPrice = this.computePathPrice(e);
+
+          if(pathPrice < money && pathPrice < minPathPrice){
+            minPathPrice = pathPrice;
+            longestPathFromMoney = e;
+          }
+        });
+        i--;
+      }
+      return longestPathFromMoney;
+    }
+
+    getAllPathsOfkLength(paths, k){
+      let kLengthPaths = [];
+      paths.forEach((e) => {
+        if(e.length == k)
+        {
+          kLengthPaths.push(e);
+        }
+      });
+      return kLengthPaths;
+    }
+
+    computePathPrice(path){
+      let price = 0;
+      for(let i = 0; i < path.length; i++){
+        let id = this._getIdFromString(path[i]);
+        price += this.listBar[id].drinkPriceAvg;
+      }
+      return price;
+    }
+
 //================================================================================
 // Statistiques du graphes
 //================================================================================

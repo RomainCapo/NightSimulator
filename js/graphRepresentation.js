@@ -119,7 +119,7 @@ class GraphRepresentation{
         if(index == barNamePaths.length -1){
           string += element;
         }else {
-            string += element + '-';
+            string += element + '->';
         }
 
       }, this);
