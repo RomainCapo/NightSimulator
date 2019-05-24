@@ -226,31 +226,58 @@ priorityFunction(){
       return neighbours;
     }
 
-
+    /**
+     * Permet de calculer le chemin contenant le plus de bar possible avec la somme que l'utilisateur à renter depuis un certain bar.
+     * Le chemin doit etre le plus long possible mais avec le poids le plus court possible.
+     * Dans l'implémentation ci dessous, l'algorithme avec le plus de bar possible et non celui avec le prix le plus bas.
+     * Exemple : si on a 4 chemin ["abcd" avec un poids de 40, "aefb" avec un poids de 35, "abf" avec un poids de 20, "aeb" avec un poids de 40],
+     * l'algorithme retourneras le chemin "aefb" car c'est le chemin contenant le plus de bars avec le plus petit poids.
+     * @param  {integer} id    id du bar de départ
+     * @param  {integer} money montant que dispose l'utilisateur sur lui
+     * @return {string}       retourne le chemin le plus long avec un poids minimum
+     */
     getLongestPathFromMoney(id, money){
-      let paths = this.getAllShortestPaths(id, "drinkPriceAvg");
-      let sortedPaths = Object.values(paths);
+      let paths = this.getAllShortestPaths(id, "drinkPriceAvg");//on calcule le chemin le plus court par rapport au prix des boissons
+      let sortedPaths = Object.values(paths);//converti l'objet paths en array
 
-      const maxPathLength = Math.max.apply(Math, sortedPaths.map(function (el) { return el.length }))
+      const maxPathLength = Math.max.apply(Math, sortedPaths.map(function (el) { return el.length }));//on récupére la longeur du plus long string du tableau
 
-      let longestPathFromMoney = "";
+      let longestPathFromMoney = "";//contiendra le reultat final
       let i = maxPathLength;
-      let minPathPrice = -1;
 
-      while(longestPathFromMoney == "" || i == 0){
+      //on stocke la valeur du poids du chemin minimum
+      //on demarre avec un nombre très grand, avec lequel on est sur de trouver un chemin qui a un poids plus petit
+      let minPathPrice = 9999999999;
+
+      //on tourne dans la boucle tant qu'on a pas trouvé le chemin
+      while(longestPathFromMoney == ""){
+
+        //si le compteur arrive a 0, c'est qu'on a trouvé aucuns chemin, on sort de la boucle pour éviter une boucle infini
+        if(i == 0){
+          break;
+        }
+
+        //on recupére tous les chemins de longeur k et on les parcours
         this.getAllPathsOfkLength(sortedPaths, i).forEach((e) =>{
-          let pathPrice = this.computePathPrice(e);
+          let pathPrice = this.computePathPrice(e);//on calcule le poids du chemin
 
-          if(pathPrice < money && pathPrice < minPathPrice){
+          //on controle que l'utilisateur ai assez d'argent et que le poids du chemin calculer est plus petit que celui trouver précedement
+          if((pathPrice < money) && (pathPrice < minPathPrice)){
             minPathPrice = pathPrice;
-            longestPathFromMoney = e;
+            longestPathFromMoney = e;//le chemin actuelle devient le meilleur chemin
           }
         });
-        i--;
+        i--;//si on a trouver aucun chemin de longeur k pour nos conditions on cherche des chemins de taille k-1
       }
       return longestPathFromMoney;
     }
 
+    /**
+     * retourne tous les chemins d'une longeur k
+     * @param  {array} paths contient tous les chemins a traiter
+     * @param  {integer} k   longeur des chemins
+     * @return {array}       retourne les chemins de longeur k
+     */
     getAllPathsOfkLength(paths, k){
       let kLengthPaths = [];
       paths.forEach((e) => {
@@ -262,6 +289,11 @@ priorityFunction(){
       return kLengthPaths;
     }
 
+    /**
+     * retourne le prix d'un chemin
+     * @param  {string} path chemin a traiter
+     * @return {integer}      prix du chemin
+     */
     computePathPrice(path){
       let price = 0;
       for(let i = 0; i < path.length; i++){

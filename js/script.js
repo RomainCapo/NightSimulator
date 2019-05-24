@@ -149,7 +149,22 @@ function runClicEvent(){
         let smallestPath = gc.getShortestPath(idBarClicked, idBarSelected, critSP);
         gr.drawPathOnGraph(smallestPath);
         break;
-      default:
+      case 'moneyPath':
+        let amount = document.getElementById("amount").value;
+        console.log(amount);
+
+        if(isNaN(amount) || amount == 0){
+          alert("Please enter a correct amount in the field");
+        }
+        
+        let longestPathFromMoney = gc.getLongestPathFromMoney(idBarClicked, amount);
+
+        if(longestPathFromMoney != ""){
+          gr.drawPathOnGraph(longestPathFromMoney);
+        }else{
+          alert("The algorithme find no solutions !");
+        }
+        break;
 
     }
 
@@ -191,7 +206,7 @@ function generateSelectBarsHtml(){
  * fonction main du programme
  */
 (function() {
-  console.log(gc.getLongestPathFromMoney('a', 60));
+  gc.getLongestPathFromMoney('a', 60)
 
 
   generateSelectBarsHtml();

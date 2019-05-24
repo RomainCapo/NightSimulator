@@ -35,6 +35,7 @@ NightSimulator
     <div class="container">
       <br>
       <h1><p class="text-center"><i>Night Simulator</i></p></h1>
+      <h1><p class="text-center"><i>DJikstraConst</i></p></h1>
       <br><br>
       <div class="row">
         <div class="col-2">
@@ -59,6 +60,11 @@ NightSimulator
              <select class="form-control" id="bars">
              </select>
             </div>
+            <div class="radio">
+              <label for="moneyPath">Find the max of bar with the amount indicated : <input id="moneyPath" type="radio" name="simulation" value="moneyPath"></label>
+            </div>
+            <input type="number" name="amount" id="amount" min="1" max="999999999" value="20">
+            <br>
             <br>
             <button id="run" type="button" disabled name="button" class="btn btn-primary" onclick="runClicEvent()">Run Simulation Mode</button>
             <br>
