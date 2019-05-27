@@ -152,8 +152,7 @@ function runClicEvent(){
         gr.drawPathOnGraph(smallestPath);
         break;
       case 'moneyPath':
-        let amount = document.getElementById("amount").value;
-        console.log(amount);
+        let amount = parseInt(document.getElementById("amount").value);//récupération de l'argent de l'utilisateur
 
         if(isNaN(amount) || amount == 0){
           alert("Please enter a correct amount in the field");
@@ -161,8 +160,11 @@ function runClicEvent(){
 
         let longestPathFromMoney = gc.getLongestPathFromMoney(idBarClicked, amount);
 
-        if(longestPathFromMoney != ""){
-          gr.drawPathOnGraph(longestPathFromMoney);
+        if(longestPathFromMoney[0] != ""){
+          gr.drawPathOnGraph(longestPathFromMoney[0]);
+
+          let result = document.getElementById('result');
+          result.innerHTML = gr.showBarFromMoney(amount, longestPathFromMoney[1]);
         }else{
           alert("The algorithme find no solutions !");
         }

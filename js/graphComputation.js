@@ -368,7 +368,7 @@ _resetBar(){
      * l'algorithme retourneras le chemin "aefb" car c'est le chemin contenant le plus de bars avec le plus petit poids.
      * @param  {integer} id    id du bar de départ
      * @param  {integer} money montant que dispose l'utilisateur sur lui
-     * @return {string}       retourne le chemin le plus long avec un poids minimum
+     * @return {array}       retourne le chemin le plus long avec un poids minimum dans la 1ere case du tableau et le cout de celui-ci dans la 2eme
      */
     getLongestPathFromMoney(id, money){
       let paths = this.getAllShortestPaths(id, "drinkPriceAvg");//on calcule le chemin le plus court par rapport au prix des boissons
@@ -403,7 +403,7 @@ _resetBar(){
         });
         i--;//si on a trouver aucun chemin de longeur k pour nos conditions on cherche des chemins de taille k-1
       }
-      return longestPathFromMoney;
+      return [longestPathFromMoney, minPathPrice];
     }
 
     /**

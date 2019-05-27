@@ -159,6 +159,16 @@ class GraphRepresentation{
     return string;
   }
 
+  /**
+   * Méthode d'affichage HTML. Retourne un string permettant d'afficher l'argent utilisé et restant lors de la simulation avec le montant entré par l'utilisateur.
+   * @param  {integer} amount    montant entré par l'utilisateur
+   * @param  {integer} pathPrice cout du chemin trouvé
+   * @return {string}           string en format html contenant l'affichage
+   */
+  showBarFromMoney(amount, pathPrice){
+    return '<h3>The path has a cost of : <strong>' + pathPrice + '</strong></h3><h3>You have <strong>' + (amount - pathPrice) + ".-</strong> left</h3>";
+  }
+
   showBarsStat(gc){
     let maxDrinkPrice = gc.getMaxDrinkPrice();
     let minDrinkPrice = gc.getMinDrinkPrice();
