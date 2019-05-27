@@ -108,10 +108,10 @@ class GraphRepresentation{
    * @return {string}               string en format html contenant l'affichage
    */
   showSmallestPaths(smallestPaths){
-    let string = '<h2>Shortest way to go at :  </h2>';
+    let string = '<h1>Shortest way to go at :  </h1><br>';
 
     Object.entries(smallestPaths).forEach(([key, val]) => {
-      string += '<span><strong>' + this.getBarNameFromId(key) + ' : </strong>';
+      string += '<span><h5><strong>' + this.getBarNameFromId(key) + ' : </strong>';
 
       let barNamePaths = this._getBarNameFromPath(val)
 
@@ -123,7 +123,7 @@ class GraphRepresentation{
         }
 
       }, this);
-      string += '</span><br/>';
+      string += '</span></h5>';
   });
   return string;
 }

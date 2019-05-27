@@ -156,7 +156,7 @@ function runClicEvent(){
         if(isNaN(amount) || amount == 0){
           alert("Please enter a correct amount in the field");
         }
-        
+
         let longestPathFromMoney = gc.getLongestPathFromMoney(idBarClicked, amount);
 
         if(longestPathFromMoney != ""){
@@ -187,6 +187,18 @@ function exitClicEvent(){
 
   document.getElementById("exit").disabled = true;
   document.getElementById("run").disabled = false;
+}
+
+/**
+ * evenement de clic sur un radio bouton
+ */
+function radioClickEvent(){
+  let selectedRadio = document.querySelector('input[name="simulation"]:checked').value;
+  if(selectedRadio == 'shortestPath'){
+    document.getElementById('barsGroup').style.display = "block";
+  }else{
+    document.getElementById('barsGroup').style.display = "none";
+  }
 }
 
 /**

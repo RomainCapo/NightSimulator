@@ -142,7 +142,12 @@ priorityFunction(){
             neighbourPriority = neighbourBar.drinkPriceAvg;
             break;
           case 'ambience':
-            neighbourPriority = neighbourBar.ambience;
+          // comme pour l'ambiance on veut l'ambiance maximum et pas l'ambiance min on s'arrange pour renvoyer un petit nombre quand le bar à
+          // une bonne ambiance et un grand nombre quand il  a une petite ambiance. Comme l'ambiance est echelonné sur 10, il suffit de soustraire
+          // à une constante pour réguler le tout
+            const ambianceOffset = 11;
+
+            neighbourPriority = ambianceOffset - neighbourBar.ambience;
             break;
           case 'allCriterions':
             neighbourPriority = neighbours[i]["priority"] + neighbourBar.drinkPriceAvg + neighbourBar.ambience;
@@ -225,6 +230,15 @@ priorityFunction(){
       }
       return neighbours;
     }
+  //================================================================================
+  // Chemin le plus court de longeur k
+  //================================================================================
+
+  
+
+  //================================================================================
+  // Chemin le plus long avec argent
+  //================================================================================
 
     /**
      * Permet de calculer le chemin contenant le plus de bar possible avec la somme que l'utilisateur à renter depuis un certain bar.
@@ -353,30 +367,6 @@ getMinAmbience(){
     }
   });
   return [barName, min];
-}
-
-getMaxDist(){
-  let max = 0;
-  for(let i = 0; i < this.contigMatrix.length; i++){
-    for(let j = 0; j < this.contigMatrix.length;j++){
-      if(max < this.contigMatrix[i][j]){
-        max = this.contigMatrix[i][j];
-      }
-    }
-  }
-  return max;
-}
-
-getMinDist(){
-  let min = 0;
-  for(let i = 0; i < this.contigMatrix.length; i++){
-    for(let j = 0; j < this.contigMatrix.length;j++){
-      if(min < this.contigMatrix[i][j]){
-        min = this.contigMatrix[i][j];
-      }
-    }
-  }
-  return min;
 }
 
 //================================================================================
