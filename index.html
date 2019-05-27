@@ -31,7 +31,7 @@ NightSimulator
         }
 
         .container{
-          max-width: 1800px;
+          max-width: 1600px;
         }
     </style>
   </head>
@@ -73,9 +73,13 @@ NightSimulator
               <div class="card-header">Secondary objectif</div>
                 <div class="card-body">
                   <div class="radio">
+                    <label for="shortestKPath">Find the shorest path of length ... : <input id="shortestKPath" type="radio" name="simulation" value="shortestKPath" onclick="radioClickEvent()"></label>
+                  </div>
+                  <input type="number" name="k" id="k" min="1"  value="3">
+                  <div class="radio">
                     <label for="moneyPath">Find the max of bar with the amount indicated : <input id="moneyPath" type="radio" name="simulation" value="moneyPath" onclick="radioClickEvent()"></label>
                   </div>
-                  <input type="number" name="amount" id="amount" min="1" max="999999999" value="20">
+                  <input type="number" name="amount" id="amount" min="1" value="20">
                 </div>
             </div>
             <button id="run" type="button" disabled name="button" class="btn btn-primary" onclick="runClicEvent()">Run Simulation Mode</button>
@@ -105,28 +109,94 @@ NightSimulator
       <br>
       <br>
       <div class="row">
-        <div class="col-3" >
-
-        </div>
-        <div class="col-6" id="result">
-
-        </div>
-        <div class="col-3" >
-
-        </div>
+        <div class="col-3" ></div>
+        <div class="col-6" id="result"></div>
+        <div class="col-3" ></div>
       </div>
+      <hr>
+      <hr>
+      <h1>Contextualisation</h1>
+      <h3>Résumé</h3>
+      <p>
+        Le but du projet est de représenter différents bars sous forme d'un graphe, chaques bars seraient séparés d’une certaine distance les uns des autres.
+        De plus, chaques bars auraient comme attribut le prix moyen de la boisson, une note sur l'ambiance, etc.
+        Il serait alors possible de lancer différentes simulation sur ce graphe. Les bars présent sur le graphe sont des bars présent à Neuchâtel et les
+        attrbuts de ceux ci ont été ajouté arbitrairement.
+      </p>
+      <h3>Objectifs principaux</h3>
+      <p>
+        Dans un premier temps, a partir d'un certain bar l'utilisateur pourra connaitre la distance la plus courte pour se rendre a chacun des autres bars.
+        Le chemin sera calculé selon différents critères par rapport au choix de l'utilisateur:
+        <ul>
+          <li>La distance</li>
+          <li>Le prix de la boisson</li>
+          <li>La note d'ambiance</li>
+          <li>Avec tous les critères ci-dessus</li>
+        </ul>
+      </p>
+      <h3>Objectifs secondaires</h3>
+      <p>
+        <ul>
+          <li>A partir d'un certain bar, l'utilisateur a la possibilité de choisir combien de bar il souhaite visiter (k bar). L'algorithme recherche alors, le chemin le plus court de longeur k depuis un sommet précis.</li>
+          <li>L'utilisateur aurait la possibilité de rentrer la somme d'argent qu'il a sur lui. L'algorithme lui indique, a partir d'un bar, le chemin avec le plus de bar tout en respectant les contraintes d'argent de l'utilisateur. L'algorithme partirait du principe que l'utilisateur boit un verre dans chaques bars.</li>
+        </ul>
+      </p>
+      <h3>Algorithme utilisé</h3>
+      <h5>Objectifs principaux</h5>
+      <ul>
+        <li>Algorithme de djiksta avec différentes fonctions de priorité</li>
+      </ul>
+      <h5>Objectifs secondaires</h5>
+      <ul>
+        <li>Algorithme de djiksta avec enregistrement du nombre de sommet parcourus</li>
+        <li>Algorithme de djikstra et traitement sur l'arbre recouvrant</li>
+      </ul>
+      <h1>Utilisation du programme</h1>
+      <p>
+        Pour utiliser le programme, il faut d'abords selectionner un noeud sur le graphe. Après cela, il faut choisir la simulation que l'on souhaite lancer sur le graphe. Les différentes simulations se trouve a gauche du graphe et peuvent être lancé avec différents paramètre. Pour lancer la simulation, il faut appuyer sur le bouton <i><strong>Run simulation</strong></i>. Selon la simulation, le résultat sera indiqué directement sur le graphe avec une coloration des sommets et des arretes ou en dessous du graphes sous formes de text. Pour quitter la simulation et que le graphe reprenne sont état normal, il faut cliquer sur le bouton <i><strong>Exit simulation</strong></i>. Par la suite une autre simulation peut alors être lancée. A droite du graphe, on peut voir différentes statistiques sur les bars du graphes et quand on clic sur un bar du graphes ées différentes informations relatives à celui-ci.
+      </p>
+      <h1>Méthodologie et développement</h1>
+      <h3>Structure et librairie utilisée</h3>
+      <p>
+        Pour le developpement de mon application, j'avais besoin d'un affichage graphique pour dessiner de manière correcte les graphes. Je me suis alors tourné vers la librairie <a href="https://visjs.org/">vis.js</a> qui permet de représenté des graphes. J'ai choisi cette librairie, car elle est très simple d'utilisation, permet d'avoir un rendu très personnalisable et les sommets et les arretes sont représentés via du JSON. Ce dernier élément est très utile car il permet de récupérer facilement ces objets ainsi que leurs propriétés pour effectuer différents traitement.
+      </p>
+      <p>
+        Voici comment j'ai organisé la structure du code pour ce projet selon les différents fichiers:
+      </p>
+        <ul>
+          <li><strong><i>script.js : </i></strong>Ce fichier joue le role de fonction main (point d'entrée) et  permet d'instancier tout les différents objets utiles pour les simulations et le dessin sur le graphe, d'intéragir avec le fichier HTML et de lancer les bonnes simulations et méthodes de dessin en fonction des évenement HTML. Il permet également, de faire le lien avec la librairie vis.js en declarant tous les noeuds et cotés nécaissaire au graphe.</li><br>
+          <li><strong><i>bar.js : </i></strong> Cette classe va contenir uniquement les différents attributs des bars ainsi que leur état durant le parcours avec djiksta nottament.</li><br>
+          <li><strong><i>priorityQueue.js : </i></strong> Cette classe représente la file de priorité utilisé pour les différentes implémentations des algorithmes de djikstra. Elle contient toute les différentes méthodes permettant d'intéragir avec la strucure de données. Dans la file de priotité, on va y placer des objects QElement qui vont contenir le bar en question, la priorité du bar et le nombre de noeud parcouru (uniquement dans le cas du chemin le plus court de longeur k)</li><br>
+          <li><strong><i>graphRepresentation.js : </i></strong> Cette classe permet de dessiner et d'effectuer différents traitement graphique ou d'affichage en rapport avec le graphe. Elle permet par exemple de dessiner un chemin sur le graphe, de colorer un noeud ou d'afficher le résultat d'un simulation. Son principale rôle est d'intéragir avec la librairie vis.js et ainsi de ne pas s'occuper de l'affichage dans les méthodes de calcul du graphe. On va travailler avec les objets vis.js et non avec les représentations algorithmiques du graphe(comme les matrices de contiguité, etc).</li><br>
+          <li><strong><i>graphComputation.js : </i></strong>Cette classe représente le graphe en lui même, c'est a dire sous sa forme algorithmique et non graphique. Il contient toutes les méthodes d'initialisation et de création du graphe. C'est également dans cette classe, que l'on va retrouver toutes les méthodes de calcules(méthodes utilitaires pour les algorithmes de parcours de graphes, méthodes de statistique sur les graphes, ect) et les algorithmes s'appliquant sur les graphes comme celui de djikstra, etc.</li>
+        </ul>
+      <h3>Initialisation et structure de données</h3>
+      <p>
+        Pour représenté mon graphe, j'ai choisi une matrice de contiguité contenu dans la classe du graphe plutôt qu'une liste adjacente contenu dans chacun des bars. J'ai choisi cette solution étant donné que le graphe peut potentiellement être fortement connexe et que la matrice de contoguité ne prendra pas trop de place en mémoire étant donné qu'il ne devrait pas dépasser une certaine taille. De plus, la matrice de contiguité est beaucoup plus pratique pour savoir si 2 sommets sont voisins l'un de l'autre. En plus de la matrice de contiguité, une liste contient tous les différents objets bars. Il est à noter que dans l'implémentation actuelle, le graphe ne peut pas dépasser 26 noeuds étant donner que j'utilise les lettres de l'alphabet pour représenter les sommets.
+      </p>
+      <p>
+        Pour l'initialisation, je passe à mon objet GraphComputation les objets nodes et edges de vis.js. Les fonctions <i><strong>_loadBarsFromJson()</strong></i> et <i><strong>_loadEdgesFromJson()</strong></i> s'occupe de remplir la matrice de contiguité et la liste contenant les bars à partir des objets vis.js.
+      </p>
+      <h3>Algorithmes</h3>
+      <h5>Objectifs principaux</h5>
+      <p>
+        Pour réaliser mon objectif principale, j'utilise l'algorithme de djikstra qui me permet de trouver le chemin le plus court entre un noeud initial et tous les autres noeuds du graphe. L'algorithme utilise une file de priorité. Une file de priorité est une structure de données qui contient un élément et une priotité associée. Dans le file de priorité les éléments sont alors triés dans l'ordre croissant de leur priorité. L'algorithme utilise la file de priorité pour y stocker les différents sommets a traiter. La priorité des sommets dépendera alors dans notre cas du critère choisi par l'utilisateur. Chaque bar contient un attribut indiquant si le sommet est visité(c'est a dire si le sommet à été traité), si il a été rencontré(c'est a dire si il a été placé dans la file de priorité) et l'id du sommet qui l'a placé dans la file de priorité.
+      </p>
+      <p>
+          Pour chaques sommets contenus dans la file de priorités, on l'enleve de la file, on calculer la priorité de chacuns de ses voisins. Si le sommet n'as pas été visité, on regarde si il à été rencontré. Si c'est le cas on place le sommet dans la file de priorité avec sa priorité associé. Et si le sommet à déjà été visité, et que la priorité actuelle du sommet est plus petite que celle dans la file de priorité on modifie sa priorité. Il ne faut pas oublier qu'a chaque étape on garde en mémoire l'id du parent. On continue d'executer l'algorithme de cette manière jusqu'a ce que la file de priorité sois vide.
+      </p>
+      <p>
+        Une fois l'algorithme de djikstra executé, 
+      </p>
+      <h1>Conclusion</h1>
+      <h1>Source</h1>
+      <ul>
+        <li>Support de cours d'Algorithmes et structures de données Chapitre VI : Graphes de M.Hüsser</li>
+        <li>https://stackoverflow.com/questions/55994828/how-to-find-the-shortest-path-of-length-k-from-a-vertex-in-a-weighted-graph</li>
+        <li>https://medium.com/@adriennetjohnson/a-walkthrough-of-dijkstras-algorithm-in-javascript-e94b74192026</li>
+        <li>https://visjs.org/</li>
+      </ul>
     </div>
-    <hr>
-    <hr>
-    <h1>Contextualisation</h1>
-    <h1>Méthodologie et développement</h1>
-    <h1>Conclusion</h1>
-    <h1>Source</h1>
-    <ul>
-      <li>Support de cours d'Algorithmes et structures de données Chapitre VI : Graphes de M.Hüsser</li>
-      <li>https://stackoverflow.com/questions/55994828/how-to-find-the-shortest-path-of-length-k-from-a-vertex-in-a-weighted-graph</li>
-      <li>https://medium.com/@adriennetjohnson/a-walkthrough-of-dijkstras-algorithm-in-javascript-e94b74192026</li>
-    </ul>
     <script src="js/bar.js"></script>
     <script src="js/priorityQueue.js"></script>
     <script src="js/graphRepresentation.js"></script>
