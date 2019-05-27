@@ -1,3 +1,10 @@
+/*
+* Romain Capocasale
+* INF2dlm-A
+* He-Arc
+* 15.05.2019
+* NightSimulator
+ */
 /**
  * represente un sommet du graphe
  */
@@ -16,5 +23,6 @@ class Bar {
     this.ambience = ambience;
     this.visited = false;
     this.meeted = false;
+    this.idParent = 'none';
   }
 }
