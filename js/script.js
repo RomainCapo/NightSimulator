@@ -6,9 +6,6 @@
 * NightSimulator
  */
 
-//gloabl varaible
-let isSimulationMode = false;
-
 // creation d'un tableau avec les noeuds
 var nodes = new vis.DataSet([
 {id: 'a', label: 'Republic Bar', drinkPriceAvg:12, ambience:9, x: 870, y: 0},
@@ -75,21 +72,22 @@ var options = {
    }
 };
 
-
 var network = new vis.Network(container, data, options);//Initialisation du reseau
 
-let gr = new GraphRepresentation(nodes, edges);
+let gr = new GraphRepresentation(nodes, edges);//création de l'objet permettant de dessiner sur le graphe
 gr.initEdgesLabel();
+
 let gc = new GraphComputation(nodes, edges);//création du graphe
 
 let idBarClicked = -1;//id du noeud cliqué, -1 si aucun noeud cliqué
+let isSimulationMode = false;//indique l'état dans lequel est le graphe, true -> en simulation, false -> pas en simulation
 
 /**
- * evenement lors d'un clic sur un noeud
+ * Evenement lors d'un clic sur un noeud. Lors du clic, on colorie le noeud selon le mode de simulation et on récupère l'id di noeud.
  */
 network.on('selectNode', function (properties) {
   let nodeID = properties.nodes[0];
-  idBarClicked = 0;
+
   if (nodeID) {
     idBarClicked = this.body.nodes[nodeID].options.id;
   }
@@ -105,7 +103,7 @@ network.on('selectNode', function (properties) {
 });
 
 /**
- * evenement lors de la deselection d'un noeud
+ * Evenement lors de la deselection d'un noeud. On decolorie le noeud desélectionné.
  */
 network.on('deselectNode', function(properties){
     let deselectedNodeId = properties.previousSelection.nodes[0];
@@ -118,15 +116,16 @@ network.on('deselectNode', function(properties){
 });
 
 /**
- * evenement lors du clic sur le bouton de lancement de la simulation
+ * Evenement lors du clic sur le bouton de lancement de la simulation
  */
 function runClicEvent(){
   if(idBarClicked != -1){
-    let selectedRadio = document.querySelector('input[name="simulation"]:checked').value;
+    let selectedRadio = document.querySelector('input[name="simulation"]:checked').value;//on récupére le nom de la simulation que veux lancer l'utilisateur
 
     //ASP : All Shortest Paths
     switch (selectedRadio) {
       case 'allShortestPaths':
+        //récupération du critère de simulation
         let eCritASP = document.getElementById("criterion");
         let critASP = eCritASP.options[eCritASP.selectedIndex].value;
 
@@ -134,15 +133,18 @@ function runClicEvent(){
 
         gr.colorNode(idBarClicked, '#5cb85c');
 
+        //affichage des resultats
         let result = document.getElementById('result');
         result.innerHTML = gr.showSmallestPaths(simulationResult);
         break;
 
       // Shortest Path
       case 'shortestPath':
+        //récupération du bar séléctionné
         let eBars = document.getElementById("bars");
         let idBarSelected = eBars.options[eBars.selectedIndex].value;
 
+        //récupération du critère de simulation
         let eCritSP = document.getElementById("criterion");
         let critSP = eCritSP.options[eCritSP.selectedIndex].value;
 
@@ -166,6 +168,17 @@ function runClicEvent(){
         }
         break;
 
+      case 'shortestKPath':
+        //récupération de la longeur du chemin
+        let k = document.getElementById("k").value;
+        let shortestKPath = gc.getShortestKPath(idBarClicked, parseInt(k));
+
+        if(shortestKPath != ""){
+          gr.drawPathOnGraph(shortestKPath);
+        }else{
+          alert("The algorithme find no solutions !");
+        }
+
     }
 
     isSimulationMode = true;
@@ -176,7 +189,7 @@ function runClicEvent(){
 }
 
 /**
- * evenement lors du clic sur le bouton de fermeture de la simulation
+ * Evenement lors du clic sur le bouton de fermeture de la simulation. On remet le graphe dans l'état normal
  */
 function exitClicEvent(){
   gr.resetGraph();
@@ -190,7 +203,7 @@ function exitClicEvent(){
 }
 
 /**
- * evenement de clic sur un radio bouton
+ * Evenement de clic sur un radio bouton. On affiche la liste déroulante des bars lors de la selection du chemin le plus court
  */
 function radioClickEvent(){
   let selectedRadio = document.querySelector('input[name="simulation"]:checked').value;
@@ -202,7 +215,7 @@ function radioClickEvent(){
 }
 
 /**
- * permet de genéré en format html la liste deroulante permettant de choisir le bar voulu pour la simulation
+ * Permet de genéré en format html la liste deroulante permettant de choisir le bar voulu pour la simulation.
  */
 function generateSelectBarsHtml(){
   let node = document.getElementById('bars');
@@ -215,16 +228,11 @@ function generateSelectBarsHtml(){
 }
 
 /**
- * fonction main du programme
+ * Fonction main du programme
  */
 (function() {
-  gc.getLongestPathFromMoney('a', 60)
-
-
   generateSelectBarsHtml();
-  let maxDrinkPrice = gc.getMaxDrinkPrice();
-  let minDrinkPrice = gc.getMinDrinkPrice();
-  let maxAmbience = gc.getMaxAmbience();
-  let minAmbience = gc.getMinAmbience();
-  document.getElementById('barStatContent').innerHTML = "<ul><li>Max drink price : <strong>"+ maxDrinkPrice[0] +"</strong></li>" + "<li>Min drink price : <strong>"+ minDrinkPrice[0] +"</strong></li>" + "<li>Max ambience : <strong>"+ maxAmbience[0] +"</strong></li>" + "<li>Min ambience : <strong>"+ minAmbience[0] +"</strong></li></ul>";
+
+  //affichage des statistiques du bar
+  document.getElementById('barStatContent').innerHTML = gr.showBarsStat(gc);
 })();

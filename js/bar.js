@@ -23,6 +23,6 @@ class Bar {
     this.ambience = ambience;
     this.visited = false;
     this.meeted = false;
-    this.idParent = 'none';
+    this.idParent = 'none';//none si le sommet n'a été placé dans la file de priorité par aucuns autres sommets
   }
 }

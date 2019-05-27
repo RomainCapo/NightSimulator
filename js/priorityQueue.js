@@ -13,10 +13,12 @@ class QElement{
    * Constructeur de QElement
    * @param {object} element  objet contenu dans la file de prioritée
    * @param {number} priority priorité de l'element en question
+   * @param {number} nbBrowsedNode nombre de noeud parcouru (utile pour la recherche du chemin le plus court de longeur k)
    */
-  constructor(element, priority){
+  constructor(element, priority, nbBrowsedNode){
     this.element = element;
     this.priority = priority;
+    this.nbBrowsedNode = nbBrowsedNode;
   }
 }
 
@@ -37,8 +39,8 @@ class PriorityQueue{
  * @param  {object} element  objet a placé dans la file
  * @param  {number} priority priorité de l'element dans la file
  */
-  enqueue(element, priority){
-    var qElement = new QElement(element, priority);
+  enqueue(element, priority, nbBrowsedNode = -1){
+    var qElement = new QElement(element, priority, nbBrowsedNode);
     var contain = false;
 
     for (var i = 0; i < this.items.length; i++) {
@@ -61,6 +63,8 @@ class PriorityQueue{
   getPriority(element){
     for(let i = 0; i < this.items.length; i++)
     {
+      //compare l'élment de la file de priorité avec celui passé en parametre
+      //JSON.stringify -> serialize l'objet
       if(JSON.stringify(element) === JSON.stringify(this.items[i].element) )
       {
         return this.items[i].priority;
@@ -72,17 +76,20 @@ class PriorityQueue{
    * Change la priorité du sommet passé en parametre
    * @param  {object} element  object ou l'as priotié doit changer
    * @param  {number} priority nouvelle priorite de l'objet
+   * @param  {number} nbBrowsedNode nombre de noeud parcouru (utile pour la recherche du chemin le plus court de longeur k)
    */
-  decreasePriority(element, priority, idParent){
+  decreasePriority(element, priority, nbBrowsedNode = -1){
     for(let i = 0; i < this.items.length; i++)
     {
+      //compare l'élment de la file de priorité avec celui passé en parametre
+      //JSON.stringify -> serialize l'objet
       if(JSON.stringify(element) === JSON.stringify(this.items[i].element) )
       {
         if (i !== -1) this.items.splice(i, 1);
       }
     }
 
-    this.enqueue(element, priority);
+    this.enqueue(element, priority, nbBrowsedNode);
   }
 
 
