@@ -136,15 +136,16 @@ class GraphRepresentation{
   /**
    * Methode d'affichage HTML. Retourne un string permettant d'afficher les différents chemin de bar sur la page
    * @param  {array} smallestPaths tableau contenant tous les chemins les plus court a partir d'un point
+   * @param  {string} criterion critere de la simulation
    * @return {string}               string en format html contenant l'affichage
    */
-  showSmallestPaths(smallestPaths){
+  showAllShortestPaths(smallestPaths, criterion){
     let string = '<h1>Shortest way to go at :  </h1><br>';
 
     Object.entries(smallestPaths).forEach(([key, val]) => {
-      string += '<span><h5><strong>' + this.getBarNameFromId(key) + ' : </strong>';
+      string += '<h5><strong>' + this.getBarNameFromId(key) + ' : </strong>';
 
-      let barNamePaths = this._getBarNameFromPath(val)
+      let barNamePaths = this._getBarNameFromPath(val[0])
 
       barNamePaths.forEach(function(element, index){
         if(index == barNamePaths.length -1){
@@ -154,9 +155,39 @@ class GraphRepresentation{
         }
 
       }, this);
-      string += '</span></h5>';
+      if(criterion != "allCriterions"){
+        string += '</h5><h6 id="weightInfo"><i>With a weight of <strong>'+ val[1] +'</strong></i></h6><br>';
+      }else{
+        string += "</h5>";
+      }
+
     });
     return string;
+  }
+
+  /**
+   * Methode d'affichage HTML. Retourne un string permettant d'afficher le poids du chemin
+   * @param  {integer} weight    poids du chemin
+   * @param  {string} criterion critère du chemin
+   * @return {string}           affichage en format HTML
+   */
+  showSmallestPath(weight, criterion){
+    let string = '';
+    switch (criterion) {
+      case 'distance':
+        string = "<h3>The path has a distance of <strong>" + weight + "</strong> meters!</h3>";
+        break;
+      case 'drinkPriceAvg':
+        string = "<h3>The total cost of the path is <strong>" + weight + "</strong> .-";
+        break;
+      case 'ambience':
+        string = "<h3>The total ambience of the path is <strong>" + weight + " !</strong>";
+        break;
+      case 'allCriterions':
+        //pas besoin d'affichage si tout les critéres ont été selectionné
+        break;
+      }
+      return string;
   }
 
   /**
