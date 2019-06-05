@@ -144,8 +144,7 @@ function runClicEvent(){
         gr.colorNode(idBarClicked, '#5cb85c');
 
         //affichage des resultats
-        let result = document.getElementById('result');
-        result.innerHTML = gr.showSmallestPaths(simulationResult);
+        document.getElementById('result').innerHTML = gr.showAllShortestPaths(simulationResult, critASP);
         break;
 
       // Shortest Path
@@ -159,7 +158,9 @@ function runClicEvent(){
         let critSP = eCritSP.options[eCritSP.selectedIndex].value;
 
         let smallestPath = gc.getShortestPath(idBarClicked, idBarSelected, critSP);
-        gr.drawPathOnGraph(smallestPath);
+        gr.drawPathOnGraph(smallestPath[0]);
+
+        document.getElementById('result').innerHTML = gr.showSmallestPath(smallestPath[1], critSP);
         break;
       case 'moneyPath':
         let amount = parseInt(document.getElementById("amount").value);//récupération de l'argent de l'utilisateur
@@ -172,9 +173,7 @@ function runClicEvent(){
 
         if(longestPathFromMoney[0] != ""){
           gr.drawPathOnGraph(longestPathFromMoney[0]);
-
-          let result = document.getElementById('result');
-          result.innerHTML = gr.showBarFromMoney(amount, longestPathFromMoney[1]);
+          document.getElementById('result').innerHTML = gr.showBarFromMoney(amount, longestPathFromMoney[1]);;
         }else{
           alert("The algorithme find no solutions !");
         }
@@ -186,7 +185,8 @@ function runClicEvent(){
         let shortestKPath = gc.getShortestKPath(idBarClicked, parseInt(k));
 
         if(shortestKPath != ""){
-          gr.drawPathOnGraph(shortestKPath);
+          gr.drawPathOnGraph(shortestKPath[0]);
+          document.getElementById('result').innerHTML = "<h3>The path has a distance of <strong>" + shortestKPath[1] + "</strong> meters !</h3>";
         }else{
           alert("The algorithme find no solutions !");
         }

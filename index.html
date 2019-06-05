@@ -17,7 +17,7 @@ NightSimulator
     <link href="lib/vis-4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
         #mynetwork {
-          /*width: auto;*/
+          width: auto;
             height: 600px;
             border: 3px solid black;
         }
@@ -36,6 +36,10 @@ NightSimulator
 
         .container{
           max-width: 1600px;
+        }
+
+        #weightInfo{
+          margin-left: 50px;
         }
     </style>
   </head>
@@ -86,8 +90,7 @@ NightSimulator
                   <input type="number" name="amount" id="amount" min="1" value="20">
                 </div>
             </div>
-            <button id="run" type="button" disabled name="button" class="btn btn-primary" onclick="runClicEvent()">Run Simulation Mode</button>
-            <br>
+            <button id="run" type="button" disabled name="button" class="btn btn-primary btn-block" onclick="runClicEvent()">Run Simulation Mode</button>
             <br>
           </div>
           </div>
@@ -112,9 +115,9 @@ NightSimulator
       <br>
       <br>
       <div class="row">
-        <div class="col-3" ></div>
-        <div class="col-6" id="result"></div>
-        <div class="col-3" ></div>
+        <div class="col-2" ></div>
+        <div class="col-8" id="result"></div>
+        <div class="col-2" ></div>
       </div>
       <hr>
       <hr>

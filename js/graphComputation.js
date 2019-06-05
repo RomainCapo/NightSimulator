@@ -103,15 +103,38 @@ class GraphComputation {
   }
 
   /**
-   * Calcule le poids d'un chemin du graphe
+   * Calcule la distance d'un chemin du graphe
    * @param  {string} path chemin a calculer
-   * @return {integer}      poids du chemin
+   * @return {integer}      distance du chemin
    */
-  _getPathWeight(path){
-    let weight = 0;
+  _computePathDistance(path){
+    let distance = 0;
     for(let i = 0; i < path.length; i++){
       if((path.length-1) != i){
-        weight += this.contigMatrix[this._getIdFromString(path[i])][this._getIdFromString(path[i+1])];
+        distance += this.contigMatrix[this._getIdFromString(path[i])][this._getIdFromString(path[i+1])];
+      }
+    }
+    return distance;
+  }
+
+  /**
+   * Retourne le poids d'un chemin par rapport à son critère avec lequelle il a été calculé
+   * @param  {string} path      chemin à traiter
+   * @param  {string} criterion critère
+   * @return {integer}           poids du chemin selon le critère
+   */
+  _computePathByCriterion(path, criterion){
+    let weight = 0;
+    if(criterion == "distance"){
+      weight = this._computePathDistance(path);
+    }else if(criterion == "allCriterions"){
+      return -1;
+    }else{
+      for(let i = 0; i < path.length; i++){
+        console.log("path : " + path);
+        console.log("i :" + i);
+        let id = this._getIdFromString(path[i]);
+        weight += this.listBar[id][criterion];
       }
     }
     return weight;
@@ -130,6 +153,25 @@ _resetBar(){
       this.listBar[i].meeted = false;
       this.listBar[i].idParent = "none";
     }
+  }
+
+  /**
+   * permet d'obtenir tout les voisins d'un sommet pour un id donné
+   * @param  {string} idBar id du bar
+   * @return {array}       tableau associatif contenant pour chaque case l'objet representant le bar, ainsi que la priorite du chemin le reliant
+   */
+ _getNeighbours(idBar){
+    let intIdBar = this._getIdFromString(idBar);
+    let neighbours = [];
+    for(let i = 0; i < this.contigMatrix[intIdBar].length; i++){
+      if(this.contigMatrix[intIdBar][i] != 0){
+        let tmp = new Array(2);
+        tmp["bar"] = this.listBar[i];
+        tmp["priority"] = this.contigMatrix[intIdBar][i];
+        neighbours.push(tmp);
+      }
+    }
+    return neighbours;
   }
 
   /**
@@ -231,45 +273,36 @@ _resetBar(){
  * Permet de calculer le chemin le plus court entre 2 sommets.
  * @param  {string} startId id du sommet initial
  * @param  {string} endId   id du somment final
- * @return {string}         retourne le chemin le plus court entre 2 sommets.
+ * @return {string}         retourne le chemin le plus court entre 2 sommets et son poids.
  */
   getShortestPath(startId, endId, criterion){
     this._dijkstra(startId, criterion);
-    return this._getShortestPathRecursive(endId).split("").reverse().join("");//permet de renverser le string renvoyer par la fonction
+    let path = this._getShortestPathRecursive(endId).split("").reverse().join("");//permet de renverser le string renvoyer par la fonction
+    return [path, this._computePathByCriterion(path, criterion)];
   }
 
 /**
- * permet de calculer tous les chemin les plus courts a partir d'un sommet initial .
- * @param  {string} startId id du sommet initial
- * @return {array}         tableau contenant tous les chemins les plus court pour atteindre pour atteindre tous les sommets du graphe a partir d'un sommet initial.
+ * permet de calculer tous les chemin les plus courts a partir d'un sommet initial selon un critère.
+ * @param  {integer}  startId           id du bar initial
+ * @param  {string}  criterion         critère de la simulation
+ * @param  {Boolean} [withWeight=true] permet d'indiquer si l'on veut les poids des chemins ou non dans le tableau retourné
+ * @return {array}                    retourne le tableau de tous les chemins les plus court a partir du bar initial jusqu'a tous les autres bars
  */
-  getAllShortestPaths(startId, criterion){
+  getAllShortestPaths(startId, criterion, withWeight = true){
     this._dijkstra(startId, criterion);
     let paths = [];
     this.listBar.forEach(function(e){
-      paths[e.id] = this._getShortestPathRecursive(e.id).split("").reverse().join("");//permet de renverser le string renvoyer par la fonction
+      let path = this._getShortestPathRecursive(e.id).split("").reverse().join("");//permet de renverser le string renvoyer par la fonction
+
+      if(withWeight){
+        paths[e.id] = [path, this._computePathByCriterion(path, criterion)];
+      }else{
+        paths[e.id] = path;
+      }
+
     }, this);
     return paths;
   }
-
-  /**
-   * permet d'obtenir tout les voisins d'un sommet pour un id donné
-   * @param  {string} idBar id du bar
-   * @return {array}       tableau associatif contenant pour chaque case l'objet representant le bar, ainsi que la priorite du chemin le reliant
-   */
-    _getNeighbours(idBar){
-      let intIdBar = this._getIdFromString(idBar);
-      let neighbours = [];
-      for(let i = 0; i < this.contigMatrix[intIdBar].length; i++){
-        if(this.contigMatrix[intIdBar][i] != 0){
-          let tmp = new Array(2);
-          tmp["bar"] = this.listBar[i];
-          tmp["priority"] = this.contigMatrix[intIdBar][i];
-          neighbours.push(tmp);
-        }
-      }
-      return neighbours;
-    }
 
   //================================================================================
   // Méthodes de calcul du chemin le plus court de longeur k
@@ -333,9 +366,7 @@ _resetBar(){
    * @return {string}         retourne le chemin de poids le plus court de longeur k
    */
   getShortestKPath(startId, k){
-    //on lance l'algorithme de djiksta avec k+1 pour pouvoir attraèé tout les chemins de longeur k, étant donné que l'algorithme fonctionne
-    //avec une comparaison strict < et non <=
-    this._dijkstraWithKLength(startId, (k+1));
+    this._dijkstraWithKLength(startId, k);
 
     let shortestPath = "";
     let minWeight = 9999999;//on prends un nombre arbitrairement grand pour calculer le minimum
@@ -343,8 +374,8 @@ _resetBar(){
       let currentPath = this._getShortestPathRecursive(e.id).split("").reverse().join("");//on recupère le chemin menant au bar et on l'inverse
 
       //on garde uniquement les chemins commencant par le point de départ et ceux de taille k+1
-      if(startId == currentPath[0] && currentPath.length == (k+1)){
-        let currentWeight = this._getPathWeight(currentPath);
+      if(startId == currentPath[0] && currentPath.length == k){
+        let currentWeight = this._computePathByCriterion(currentPath, "distance");
 
         //si la priorité du chemin est plus petite on sauve ce chemin et son poids
         if(currentWeight < minWeight){
@@ -353,7 +384,7 @@ _resetBar(){
         }
       }
     }, this);
-    return shortestPath;
+    return [shortestPath, minWeight];
   }
 
   //================================================================================
@@ -371,7 +402,7 @@ _resetBar(){
      * @return {array}       retourne le chemin le plus long avec un poids minimum dans la 1ere case du tableau et le cout de celui-ci dans la 2eme
      */
     getLongestPathFromMoney(id, money){
-      let paths = this.getAllShortestPaths(id, "drinkPriceAvg");//on calcule le chemin le plus court par rapport au prix des boissons
+      let paths = this.getAllShortestPaths(id, "drinkPriceAvg", false);//on calcule le chemin le plus court par rapport au prix des boissons
       let sortedPaths = Object.values(paths);//converti l'objet paths en array
 
       const maxPathLength = Math.max.apply(Math, sortedPaths.map(function (el) { return el.length }));//on récupére la longeur du plus long string du tableau
@@ -393,7 +424,8 @@ _resetBar(){
 
         //on recupére tous les chemins de longeur k et on les parcours
         this.getAllPathsOfkLength(sortedPaths, i).forEach((e) =>{
-          let pathPrice = this.computePathPrice(e);//on calcule le poids du chemin
+          let pathPrice = this._computePathByCriterion(e, "drinkPriceAvg");//on calcule le poids du chemin
+          console.log(pathPrice);
 
           //on controle que l'utilisateur ai assez d'argent et que le poids du chemin calculer est plus petit que celui trouver précedement
           if((pathPrice < money) && (pathPrice < minPathPrice)){
@@ -421,20 +453,6 @@ _resetBar(){
         }
       });
       return kLengthPaths;
-    }
-
-    /**
-     * retourne le prix d'un chemin
-     * @param  {string} path chemin a traiter
-     * @return {integer}      prix du chemin
-     */
-    computePathPrice(path){
-      let price = 0;
-      for(let i = 0; i < path.length; i++){
-        let id = this._getIdFromString(path[i]);
-        price += this.listBar[id].drinkPriceAvg;
-      }
-      return price;
     }
 
 //================================================================================
