@@ -80,22 +80,20 @@ gr.initEdgesLabel();
 let gc = new GraphComputation(nodes, edges);//création du graphe
 
 let idBarClicked = -1;//id du noeud cliqué, -1 si aucun noeud cliqué
-let isSimulationMode = false;//indique l'état dans lequel est le graphe, true -> en simulation, false -> pas en simulation
 
 /**
  * Evenement lors d'un clic sur un noeud. Lors du clic, on colorie le noeud selon le mode de simulation et on récupère l'id di noeud.
  */
 network.on('selectNode', function (properties) {
+
   let nodeID = properties.nodes[0];
 
   if (nodeID) {
     idBarClicked = this.body.nodes[nodeID].options.id;
   }
 
-  if(!isSimulationMode){
-    nodes.update({id:idBarClicked, color:'#0275d8'});
-      document.getElementById("run").disabled = false;
-   }
+  nodes.update({id:idBarClicked, color:'#0275d8'});
+  document.getElementById("run").disabled = false;
 
    document.getElementById('barInfo').style.visibility = "visible";
    document.getElementById('barName').textContent = nodes._data[nodeID].label;
@@ -103,22 +101,34 @@ network.on('selectNode', function (properties) {
 });
 
 /**
- * Evenement lors de la deselection d'un noeud. On decolorie le noeud desélectionné.
+ * Evenement lors de la deselection d'un noeud. On decolorie le noeud desélectionné. En cas de simulation, on decolorie les noeuds et les arretes.
  */
 network.on('deselectNode', function(properties){
+  exitSimulation();
     let deselectedNodeId = properties.previousSelection.nodes[0];
 
-    if(!isSimulationMode){
-      nodes.update({id:deselectedNodeId, color:'#5bc0de'});
-      document.getElementById("run").disabled = true;
-    }
+    nodes.update({id:deselectedNodeId, color:'#5bc0de'});
+    document.getElementById("run").disabled = true;
+
     document.getElementById('barInfo').style.visibility = "hidden";
 });
+
+/**
+ * Evenement lors du clic sur le bouton de fermeture de la simulation. On remet le graphe dans l'état normal
+ */
+function exitSimulation(){
+  gr.resetGraph();
+
+  document.getElementById('result').innerHTML = '';
+  document.getElementById("run").disabled = false;
+}
 
 /**
  * Evenement lors du clic sur le bouton de lancement de la simulation
  */
 function runClicEvent(){
+  exitSimulation();
+
   if(idBarClicked != -1){
     let selectedRadio = document.querySelector('input[name="simulation"]:checked').value;//on récupére le nom de la simulation que veux lancer l'utilisateur
 
@@ -183,25 +193,9 @@ function runClicEvent(){
 
     }
 
-    isSimulationMode = true;
-
     document.getElementById("run").disabled = true;
-    document.getElementById("exit").disabled = false;
+    //document.getElementById("exit").disabled = false;
   }
-}
-
-/**
- * Evenement lors du clic sur le bouton de fermeture de la simulation. On remet le graphe dans l'état normal
- */
-function exitClicEvent(){
-  gr.resetGraph();
-
-  isSimulationMode = false;
-
-  document.getElementById('result').innerHTML = '';
-
-  document.getElementById("exit").disabled = true;
-  document.getElementById("run").disabled = false;
 }
 
 /**
