@@ -193,7 +193,7 @@ function runClicEvent(){
 
     }
 
-    document.getElementById("run").disabled = true;
+    //document.getElementById("run").disabled = true;
     //document.getElementById("exit").disabled = false;
   }
 }
