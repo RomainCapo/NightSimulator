@@ -144,7 +144,7 @@ function runClicEvent(){
         gr.colorNode(idBarClicked, '#5cb85c');
 
         //affichage des resultats
-        document.getElementById('result').innerHTML = gr.showAllShortestPaths(simulationResult, critASP);
+        document.getElementById('result').innerHTML = gr.showAllShortestPaths(simulationResult, critASP);//affichage des résultats
         break;
 
       // Shortest Path
@@ -157,25 +157,27 @@ function runClicEvent(){
         let eCritSP = document.getElementById("criterion");
         let critSP = eCritSP.options[eCritSP.selectedIndex].value;
 
-        let smallestPath = gc.getShortestPath(idBarClicked, idBarSelected, critSP);
+        let smallestPath = gc.getShortestPath(idBarClicked, idBarSelected, critSP);//affichage des résultats
         gr.drawPathOnGraph(smallestPath[0]);
 
-        document.getElementById('result').innerHTML = gr.showSmallestPath(smallestPath[1], critSP);
+        document.getElementById('result').innerHTML = gr.showSmallestPath(smallestPath[1], critSP);//affichage des résultats
         break;
       case 'moneyPath':
         let amount = parseInt(document.getElementById("amount").value);//récupération de l'argent de l'utilisateur
 
         if(isNaN(amount) || amount == 0){
           alert("Please enter a correct amount in the field");
+          nodes.update({id:idBarClicked, color:'#0275d8'});//Colorisation du noeud en cas d'erreur
         }
 
         let longestPathFromMoney = gc.getLongestPathFromMoney(idBarClicked, amount);
 
         if(longestPathFromMoney[0] != ""){
           gr.drawPathOnGraph(longestPathFromMoney[0]);
-          document.getElementById('result').innerHTML = gr.showBarFromMoney(amount, longestPathFromMoney[1]);;
+          document.getElementById('result').innerHTML = gr.showBarFromMoney(amount, longestPathFromMoney[1]);//affichage des résultats
         }else{
           alert("The algorithme find no solutions !");
+          nodes.update({id:idBarClicked, color:'#0275d8'});//Colorisation du noeud en cas d'erreur
         }
         break;
 
@@ -184,17 +186,14 @@ function runClicEvent(){
         let k = document.getElementById("k").value;
         let shortestKPath = gc.getShortestKPath(idBarClicked, parseInt(k));
 
-        if(shortestKPath != ""){
+        if(shortestKPath[0] != ""){
           gr.drawPathOnGraph(shortestKPath[0]);
-          document.getElementById('result').innerHTML = "<h3>The path has a distance of <strong>" + shortestKPath[1] + "</strong> meters !</h3>";
+          document.getElementById('result').innerHTML = "<h3>The path has a distance of <strong>" + shortestKPath[1] + "</strong> meters !</h3>";//affichage des résulats
         }else{
           alert("The algorithme find no solutions !");
+          nodes.update({id:idBarClicked, color:'#0275d8'});//Colorisation du noeud en cas d'erreur
         }
-
     }
-
-    //document.getElementById("run").disabled = true;
-    //document.getElementById("exit").disabled = false;
   }
 }
 

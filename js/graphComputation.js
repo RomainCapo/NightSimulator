@@ -131,8 +131,6 @@ class GraphComputation {
       return -1;
     }else{
       for(let i = 0; i < path.length; i++){
-        console.log("path : " + path);
-        console.log("i :" + i);
         let id = this._getIdFromString(path[i]);
         weight += this.listBar[id][criterion];
       }
@@ -425,7 +423,6 @@ _resetBar(){
         //on recupére tous les chemins de longeur k et on les parcours
         this.getAllPathsOfkLength(sortedPaths, i).forEach((e) =>{
           let pathPrice = this._computePathByCriterion(e, "drinkPriceAvg");//on calcule le poids du chemin
-          console.log(pathPrice);
 
           //on controle que l'utilisateur ai assez d'argent et que le poids du chemin calculer est plus petit que celui trouver précedement
           if((pathPrice < money) && (pathPrice < minPathPrice)){
