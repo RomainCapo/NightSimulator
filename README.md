@@ -1,6 +1,7 @@
-# Projet d'algo num
-## TODO
-* améliorer GUI
-* faire une fonction de priorité pour djikstra
-* clean les fonctions de stats inutiles
-* faire la doc
+# Night Simulator
+
+Application that allows you to find paths between the bars of Neuchâtel according to different criteria. 
+
+## Context
+
+Project done during the 4th Bachelor semester in numerical algorithm course.
